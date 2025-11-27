@@ -11,7 +11,7 @@
     
     <div class="absolute inset-0 bg-black/50 z-0"></div>
 
-    {{-- Content --}}
+    <!-- content -->
     <div class="relative z-10 max-w-4xl mx-auto animate-fade-in-up">
         <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight drop-shadow-md">
             Keindahan Hijau Untuk <br> <span class="text-leafly-green">Setiap Ruang</span>
@@ -62,26 +62,19 @@
     </div>
 
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        {{-- Item Produk 1: Monstera --}}
         <div class="group bg-leafly-cream rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300">
-            {{-- Container Gambar (Relatif agar bisa menampung badge) --}}
             <div class="relative h-72 overflow-hidden">
-                {{-- Gambar Produk (Menggunakan Placeholder Unsplash) --}}
                 <img src="images/hydrocabai.jpg" 
                      alt="Monstera Adansonii" 
                      class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-in-out">
                 
-                {{-- Badge/Label (Opsional: misal 'Terlaris') --}}
-                <div class="absolute top-4 right-4 bg-leafly-gold text-leafly-dark text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                    ⭐ Terlaris
-                </div>
+                <div class="absolute top-4 right-4 bg-leafly-gold text-leafly-dark text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">Terlaris</div>
             </div>
             
             <div class="p-6 relative">
-                {{-- Kategori Kecil --}}
                 <span class="text-sm text-leafly-green font-medium mb-1 block">Tanaman Hias</span>
                 <h3 class="text-xl font-bold text-leafly-dark mb-2">Bibit Cabai</h3>
-                {{-- Rating Bintang (Statis) --}}
+                <!-- rating -->
                 <div class="flex items-center mb-3">
                     <span class="text-leafly-gold">★★★★★</span>
                     <span class="text-gray-500 text-sm ml-2">(5.0 / 45 Ulasan)</span>
@@ -100,16 +93,12 @@
             </div>
         </div>
 
-        {{-- Item Produk 2: Paket Hidroponik --}}
         <div class="group bg-leafly-cream rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300">
             <div class="relative h-72 overflow-hidden">
-                {{-- Gambar Placeholder Hidroponik --}}
                 <img src="images/hydrokit.png" 
                      alt="Paket Starter Hidroponik" 
                      class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-in-out">
-                <div class="absolute top-4 right-4 bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                    📦 Paket Hemat
-                </div>
+                <div class="absolute top-4 right-4 bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">Paket Hemat</div>
             </div>
             <div class="p-6 relative">
                 <span class="text-sm text-leafly-green font-medium mb-1 block">Starter Kit</span>
@@ -130,10 +119,8 @@
             </div>
         </div>
 
-        {{-- Item Produk 3: Benih --}}
         <div class="group bg-leafly-cream rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300">
             <div class="relative h-72 overflow-hidden">
-                {{-- Gambar Placeholder Benih/Sprouts --}}
                 <img src="images/bibit selada.jpg" 
                      alt="Benih Selada Premium" 
                      class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-in-out">
@@ -160,10 +147,10 @@
     </div>
 </section>
 
-<!-- ABOUT -->
+<!-- about -->
 <section id="about" class="py-20 px-6 bg-white">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {{-- Left: Image --}}
+        <!-- left image -->
         <div class="">
             <img src="{{ asset('images/hero.png') }}" alt="About Leafly" class="w-full h-80 md:h-96 object-cover rounded-2xl shadow-lg">
         </div>
@@ -177,7 +164,7 @@
                 <li>Perlengkapan hidroponik lengkap</li>
                 <li>Konsultasi dan panduan perawatan tanaman</li>
             </ul>
-            <a href="#products" class="inline-block px-6 py-3 bg-leafly-green text-leafly-dark rounded-full font-bold hover:bg-leafly-gold transition duration-300">Lihat Produk Kami</a>
+            <a href="{{ route('products.index') }}" class="inline-block px-6 py-3 bg-leafly-green text-leafly-dark rounded-full font-bold hover:bg-leafly-gold transition duration-300">Lihat Produk Kami</a>
         </div>
     </div>
 </section>

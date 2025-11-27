@@ -10,7 +10,7 @@
             <h3 class="text-lg font-bold text-leafly-gold mb-4">Navigasi</h3>
             <ul class="space-y-2 text-gray-300 text-sm">
                 <li><a href="#" class="hover:text-leafly-green">Beranda</a></li>
-                <li><a href="#products" class="hover:text-leafly-green">Katalog Produk</a></li>
+                <li><a href="{{ route('products.index') }}" class="hover:text-leafly-green">Katalog Produk</a></li>
                 <li><a href="#about" class="hover:text-leafly-green">Tentang Kami</a></li>
             </ul>
         </div>

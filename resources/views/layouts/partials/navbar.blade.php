@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <a href="{{ url('/') }}" class="flex items-center gap-2 text-white no-underline group">
             <div class="w-10 h-10 bg-leafly-green rounded-full flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform text-leafly-dark">
-                <i class="fa-solid fa-leaf"></i> {{-- Icon Daun --}}
+                <i class="fa-solid fa-leaf"></i>
             </div>
             <span class="text-2xl font-bold tracking-wide">Leafly<span class="text-leafly-green">.id</span></span>
         </a>
@@ -10,7 +10,7 @@
         <div class="hidden md:flex items-center space-x-8">
             <a href="{{ url('/') }}" class="text-white hover:text-leafly-green transition font-medium">Home</a>
             <a href="#about" class="text-white hover:text-leafly-green transition font-medium">Tentang</a>
-            <a href="#products" class="text-white hover:text-leafly-green transition font-medium">Produk</a>
+            <a href="{{ route('products.index') }}" class="text-white hover:text-leafly-green transition font-medium">Produk</a>
             
             @guest
                 <a href="{{ route('login') }}" class="text-white hover:text-leafly-gold font-medium mr-2">Masuk</a>
@@ -32,7 +32,7 @@
     <div id="mobileMenu" class="hidden absolute top-full left-0 w-full bg-leafly-dark border-t border-white/10 shadow-xl p-6 flex flex-col space-y-4 md:hidden text-center">
         <a href="{{ url('/') }}" class="block text-white hover:text-leafly-green">Home</a>
         <a href="#about" class="block text-white hover:text-leafly-green">Tentang</a>
-        <a href="#products" class="block text-white hover:text-leafly-green">Produk</a>
+        <a href="{{ route('products.index') }}" class="block text-white hover:text-leafly-green">Produk</a>
         <a href="{{ route('login') }}" class="block text-leafly-gold font-bold">Masuk / Daftar</a>
     </div>
 </nav>
