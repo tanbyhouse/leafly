@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,3 +20,6 @@ Route::get('/katalog', [
 Route::get('/katalog/{id}', [
     ProductController::class, 'show'
 ])->name('products.show');
+Route::get('/keranjang', [
+    CartController::class, 'index'
+])->name('cart.index');

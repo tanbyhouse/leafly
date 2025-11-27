@@ -11,7 +11,24 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        $cartItems = [
+            [
+                'id' => 1,
+                'name' => 'Benih Selada Hidroponik Premium',
+                'price' => 15000,
+                'image' => 'fa-seedling',
+                'quantity' => 2,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Nutrisi AB Mix Sayuran Daun',
+                'price' => 25000,
+                'image' => 'fa-bottle-droplet',
+                'quantity' => 1,
+            ]
+        ];
+
+        return view('customer.cart', compact('cartItems'));
     }
 
     /**

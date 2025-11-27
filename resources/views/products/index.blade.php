@@ -114,7 +114,7 @@
                     @foreach ($products as $product)
                     <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition duration-300 group overflow-hidden border border-gray-100 flex flex-col h-full">
                         
-                        <a href="{{ route('products.show', 1) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden block cursor-pointer">
+                        <a href="{{ route('products.show', 1) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer">
                             <i class="fa-solid fa-seedling text-6xl text-leafly-green/50 group-hover:scale-110 transition duration-500"></i>
                             
                             @if(!empty($product['badge']))
