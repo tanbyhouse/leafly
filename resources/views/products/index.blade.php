@@ -127,7 +127,7 @@
                         </div>
 
                         <!-- info -->
-                        <div class="p-4 flex flex-col flex-grow">
+                        <div class="p-4 flex flex-col grow">
                             <div class="text-xs text-gray-500 mb-1">{{ $product['category'] }}</div>
                             <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight">{{ $product['name'] }}</h3>
                             <div class="flex items-center gap-1 text-yellow-400 text-xs mb-3">

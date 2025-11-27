@@ -49,7 +49,7 @@
     @include('layouts.partials.navbar')
 
     <!-- content -->
-    <main class="flex-grow">
+    <main class="grow">
         @yield('content')
     </main>
 

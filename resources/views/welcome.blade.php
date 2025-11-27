@@ -81,7 +81,7 @@
                 </div>
                 <p class="text-gray-600 text-sm line-clamp-2 mb-6">Bibit tanaman cabai lebat.</p>
                 
-                <div class="flex justify-between items-center items-end pt-4 border-t border-gray-200/50">
+                <div class="flex justify-between items-end pt-4 border-t border-gray-200/50">
                     <div>
                         <span class="text-xs text-gray-500 block line-through">Rp 95.000</span>
                         <span class="text-2xl font-bold text-leafly-dark">Rp 75.000</span>
@@ -108,7 +108,7 @@
                     <span class="text-gray-500 text-sm ml-2">(4.8 / 120 Ulasan)</span>
                 </div>
                 <p class="text-gray-600 text-sm line-clamp-2 mb-6">Paket lengkap siap tanam untuk pemula. Berisi bak, netpot, rockwool, nutrisi AB Mix, dan benih selada.</p>
-                <div class="flex justify-between items-center items-end pt-4 border-t border-gray-200/50">
+                <div class="flex justify-between items-end pt-4 border-t border-gray-200/50">
                     <div>
                         <span class="text-2xl font-bold text-leafly-dark">Rp 125.000</span>
                     </div>
@@ -133,7 +133,7 @@
                     <span class="text-gray-500 text-sm ml-2">(5.0 / 215 Ulasan)</span>
                 </div>
                 <p class="text-gray-600 text-sm line-clamp-2 mb-6">Benih selada impor berkualitas tinggi dengan daya tumbuh 98%. Cocok untuk hidroponik maupun konvensional.</p>
-                <div class="flex justify-between items-center items-end pt-4 border-t border-gray-200/50">
+                <div class="flex justify-between items-end pt-4 border-t border-gray-200/50">
                     <div>
                          <span class="text-xs text-gray-500 block line-through">Rp 20.000</span>
                         <span class="text-2xl font-bold text-leafly-dark">Rp 15.000</span>
