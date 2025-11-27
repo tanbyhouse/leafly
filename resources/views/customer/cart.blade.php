@@ -108,7 +108,7 @@
                     </div>
 
                     <!-- checkout -->
-                    <a href="#" class="block w-full bg-leafly-dark text-white font-bold text-center py-3 rounded-lg hover:bg-leafly-gold hover:text-leafly-dark transition duration-300 shadow-lg transform active:scale-95">
+                     <a href="{{ route('checkout.index') }}" class="block w-full bg-leafly-dark text-white font-bold text-center py-3 rounded-lg hover:bg-leafly-gold hover:text-leafly-dark transition duration-300 shadow-lg transform active:scale-95">
                         Checkout Sekarang
                     </a>
                 </div>

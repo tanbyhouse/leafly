@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,3 +24,6 @@ Route::get('/katalog/{id}', [
 Route::get('/keranjang', [
     CartController::class, 'index'
 ])->name('cart.index');
+Route::get('/checkout', [
+    CheckoutController::class, 'index'
+])->name('checkout.index');
