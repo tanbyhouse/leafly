@@ -14,8 +14,7 @@
             
             <!-- searchbar -->
             <div class="w-full md:w-96 relative">
-                <input type="text" placeholder="Cari tanaman, bibit, atau alat..." 
-                    class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-leafly-green focus:border-transparent">
+                <input type="text" placeholder="Cari tanaman, bibit, atau alat..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-leafly-green focus:border-transparent">
                 <div class="absolute left-3 top-2.5 text-gray-400">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
@@ -112,38 +111,32 @@
                         ];
                     @endphp
 
-                    <!-- loop dummy (nnti pake foreach) -->
                     @foreach ($products as $product)
                     <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition duration-300 group overflow-hidden border border-gray-100 flex flex-col h-full">
-                        <div class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                        
+                        <a href="{{ route('products.show', 1) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden block cursor-pointer">
                             <i class="fa-solid fa-seedling text-6xl text-leafly-green/50 group-hover:scale-110 transition duration-500"></i>
                             
-                            <!-- badge -->
                             @if(!empty($product['badge']))
                                 <span class="absolute top-2 left-2 bg-leafly-gold text-leafly-dark text-xs font-bold px-2 py-1 rounded">
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
-                        </div>
+                        </a>
 
-                        <!-- info -->
                         <div class="p-4 flex flex-col grow">
                             <div class="text-xs text-gray-500 mb-1">{{ $product['category'] }}</div>
-                            <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight">{{ $product['name'] }}</h3>
-                            <div class="flex items-center gap-1 text-yellow-400 text-xs mb-3">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star-half-stroke"></i>
-                                <span class="text-gray-400 ml-1">({{ $product['rating'] }})</span>
-                            </div>
+                            
+                            <a href="{{ route('products.show', 1) }}" class="hover:text-leafly-green transition">
+                                <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight">{{ $product['name'] }}</h3>
+                            </a>
                             
                             <div class="mt-auto flex justify-between items-center">
                                 <span class="text-lg font-bold text-leafly-dark">{{ $product['price'] }}</span>
-                                <button class="w-8 h-8 rounded-full bg-gray-100 text-leafly-dark hover:bg-leafly-dark hover:text-white transition flex items-center justify-center">
+                                
+                                <a href="{{ route('products.show', 1) }}" class="w-8 h-8 rounded-full bg-gray-100 text-leafly-dark hover:bg-leafly-dark hover:text-white transition flex items-center justify-center">
                                     <i class="fa-solid fa-cart-plus"></i>
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>

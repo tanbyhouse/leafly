@@ -16,3 +16,6 @@ Route::get('/register', function () {
 Route::get('/katalog', [
     ProductController::class, 'index'
 ])->name('products.index');
+Route::get('/katalog/{id}', [
+    ProductController::class, 'show'
+])->name('products.show');
