@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'email',
@@ -44,5 +45,30 @@ class User extends Authenticatable
     public function notifikasis()
     {
         return $this->hasMany(Notifikasi::class);
+    }
+
+    public function produkRusaks()
+    {
+        return $this->hasMany(ProdukRusak::class, 'dilaporkan_oleh');
+    }
+
+    public function pesansDikirim()
+    {
+        return $this->hasMany(Pesan::class, 'pengirim_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->tipe_user === 'admin';
+    }
+
+    public function isKaryawan()
+    {
+        return $this->tipe_user === 'karyawan';
+    }
+
+    public function isPelanggan()
+    {
+        return $this->tipe_user === 'pelanggan';
     }
 }

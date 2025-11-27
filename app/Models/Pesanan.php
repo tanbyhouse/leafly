@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pesanan extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nomor_pesanan',
@@ -65,5 +66,15 @@ class Pesanan extends Model
     public function pembatalanPesanan()
     {
         return $this->hasOne(PembatalanPesanan::class);
+    }
+
+    public function penilaianProduks()
+    {
+        return $this->hasMany(PenilaianProduk::class);
+    }
+
+    public function pembatal()
+    {
+        return $this->belongsTo(User::class, 'dibatalkan_oleh');
     }
 }

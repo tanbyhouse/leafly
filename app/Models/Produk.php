@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Produk extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'kategori_id',
@@ -45,9 +46,9 @@ class Produk extends Model
         return $this->hasMany(FotoProduk::class);
     }
 
-    public function penilaianProduks()
+    public function fotoUtama()
     {
-        return $this->hasMany(PenilaianProduk::class);
+        return $this->hasOne(FotoProduk::class)->where('foto_utama', true);
     }
 
     public function produkRusaks()
@@ -55,13 +56,43 @@ class Produk extends Model
         return $this->hasMany(ProdukRusak::class);
     }
 
-    public function getFotoUtamaAttribute()
+    public function penilaianProduks()
     {
-        return $this->fotoProduks()->where('foto_utama', true)->first();
+        return $this->hasMany(PenilaianProduk::class);
+    }
+
+    public function keranjangs()
+    {
+        return $this->hasMany(Keranjang::class);
+    }
+
+    public function detailPesanans()
+    {
+        return $this->hasMany(DetailPesanan::class);
+    }
+
+    public function itemDalamPaket()
+    {
+        return $this->hasMany(DetailPaketProduk::class, 'produk_paket_id');
+    }
+
+    public function paketYangMemiliki()
+    {
+        return $this->hasMany(DetailPaketProduk::class, 'produk_item_id');
     }
 
     public function getRataRatingAttribute()
     {
         return $this->penilaianProduks()->avg('rating');
+    }
+
+    public function getTotalUlasanAttribute()
+    {
+        return $this->penilaianProduks()->count();
+    }
+
+    public function getStokTersediaAttribute()
+    {
+        return $this->stok > 0;
     }
 }
