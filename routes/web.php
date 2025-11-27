@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,3 +28,9 @@ Route::get('/keranjang', [
 Route::get('/checkout', [
     CheckoutController::class, 'index'
 ])->name('checkout.index');
+Route::get('/pesanan', [
+    OrderController::class, 'index'
+])->name('orders.index');
+Route::get('/pesanan/{id}', [
+    OrderController::class, 'show'
+])->name('orders.show');

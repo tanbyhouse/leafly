@@ -22,7 +22,27 @@
                     Daftar
                 </a>
             @else
-                <span class="text-white">Hi, {{ Auth::user()->name }}</span>
+                <div class="relative group">
+                    <button class="flex items-center gap-2 text-white hover:text-leafly-gold font-medium focus:outline-none">
+                        <i class="fa-regular fa-user-circle text-xl"></i>
+                        <span>{{ Auth::user()->name }}</span>
+                        <i class="fa-solid fa-chevron-down text-xs"></i>
+                    </button>
+                    
+                    <!-- dropdown -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block hover:block border border-gray-100 z-50">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
+                            <i class="fa-solid fa-user mr-2"></i> Profil Saya
+                        </a>
+                        <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
+                            <i class="fa-solid fa-clock-rotate-left mr-2"></i> Riwayat Belanja
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
+                            <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Keluar
+                        </a>
+                    </div>
+                </div>
             @endguest
         </div>
 
