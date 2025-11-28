@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,3 +42,8 @@ Route::post('/profile/avatar', [
 Route::get('/profil', [
     ProfileController::class, 'index'
 ])->name('profile.index');
+Route::prefix('admin')->name('admin.')
+->group(function () {
+    Route::get('/dashboard', [
+        DashboardController::class, 'index'])
+        ->name('dashboard');});
