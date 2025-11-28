@@ -53,7 +53,7 @@
     </div>
 
     <!-- dropdown responsif -->
-    <div id="mobileMenu" class="absolute top-full left-0 w-full bg-leafly-dark border-t border-white/10 shadow-xl p-6 flex flex-col space-y-4 md:hidden text-center hidden"> <a href="{{ url('/') }}" class="block text-white hover:text-leafly-green">Home</a>
+    <div id="mobileMenu" class="absolute top-full left-0 w-full bg-leafly-dark border-t border-white/10 shadow-xl p-6 flex-col space-y-4 md:hidden text-center hidden"> <a href="{{ url('/') }}" class="block text-white hover:text-leafly-green">Home</a>
         <a href="#about" class="block text-white hover:text-leafly-green">Tentang</a>
         <a href="{{ route('products.index') }}" class="block text-white hover:text-leafly-green">Produk</a>
         

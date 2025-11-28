@@ -10,7 +10,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user() ?? (object) [
-            'name' => 'John Doe',
+            'name' => 'Allyya Novita',
             'email' => 'customer@leafly.id',
             'phone' => '081234567890',
             'avatar' => null
