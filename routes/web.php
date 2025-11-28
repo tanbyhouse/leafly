@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,3 +35,6 @@ Route::get('/pesanan', [
 Route::get('/pesanan/{id}', [
     OrderController::class, 'show'
 ])->name('orders.show');
+Route::get('/profil', [
+    ProfileController::class, 'index'
+])->name('profile.index');
