@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,3 +48,7 @@ Route::prefix('admin')->name('admin.')
     Route::get('/dashboard', [
         DashboardController::class, 'index'])
         ->name('dashboard');});
+Route::resource('products', 
+    AdminProductController::class, [
+    'names' => 'admin.products'
+]);

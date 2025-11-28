@@ -69,7 +69,7 @@
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </button>
                     <div id="submenu-produk" class="hidden pl-4 mt-1 space-y-1">
-                        <a href="#" class="block px-4 py-2 text-sm hover:text-leafly-gold rounded-lg">• Daftar Produk</a>
+                        <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm hover:text-leafly-gold rounded-lg">• Daftar Produk</a>
                         <a href="#" class="block px-4 py-2 text-sm hover:text-leafly-gold rounded-lg">• Produk Rusak</a>
                     </div>
                 </div>
