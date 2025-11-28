@@ -21,6 +21,9 @@
                 <a href="{{ route('register') }}" class="bg-leafly-gold text-leafly-dark px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition shadow-lg transform hover:-translate-y-1">
                     Daftar
                 </a>
+                <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
+                    <i class="fa-solid fa-user mr-2"></i> Profil Saya
+                </a>
             @else
                 <div class="relative group">
                     <button class="flex items-center gap-2 text-white hover:text-leafly-gold font-medium focus:outline-none">
@@ -31,9 +34,6 @@
                     
                     <!-- dropdown -->
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block hover:block border border-gray-100 z-50">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
-                            <i class="fa-solid fa-user mr-2"></i> Profil Saya
-                        </a>
                         <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
                             <i class="fa-solid fa-clock-rotate-left mr-2"></i> Riwayat Belanja
                         </a>
@@ -53,10 +53,26 @@
     </div>
 
     <!-- dropdown responsif -->
-    <div id="mobileMenu" class="absolute top-full left-0 w-full bg-leafly-dark border-t border-white/10 shadow-xl p-6 flex flex-col space-y-4 md:hidden text-center">
-        <a href="{{ url('/') }}" class="block text-white hover:text-leafly-green">Home</a>
+    <div id="mobileMenu" class="absolute top-full left-0 w-full bg-leafly-dark border-t border-white/10 shadow-xl p-6 flex flex-col space-y-4 md:hidden text-center hidden"> <a href="{{ url('/') }}" class="block text-white hover:text-leafly-green">Home</a>
         <a href="#about" class="block text-white hover:text-leafly-green">Tentang</a>
         <a href="{{ route('products.index') }}" class="block text-white hover:text-leafly-green">Produk</a>
-        <a href="{{ route('login') }}" class="block text-leafly-gold font-bold">Masuk / Daftar</a>
+        
+        @guest
+            <a href="{{ route('login') }}" class="block text-leafly-gold font-bold">Masuk / Daftar</a>
+        @else
+            <div class="border-t border-white/20 pt-4 mt-2">
+                <span class="block text-gray-400 text-sm mb-2">Halo, {{ Auth::user()->name }}</span>
+                <a href="{{ route('profile.index') }}" class="block text-white hover:text-leafly-green py-2">Profil Saya</a>
+                <a href="{{ route('orders.index') }}" class="block text-white hover:text-leafly-green py-2">Riwayat Belanja</a>
+                
+                <!-- logout -->
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="block w-full text-red-400 font-bold py-2 hover:text-red-300">
+                        Keluar
+                    </button>
+                </form>
+            </div>
+        @endguest
     </div>
 </nav>

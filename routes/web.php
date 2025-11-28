@@ -35,6 +35,9 @@ Route::get('/pesanan', [
 Route::get('/pesanan/{id}', [
     OrderController::class, 'show'
 ])->name('orders.show');
+Route::post('/profile/avatar', [
+    ProfileController::class, 'updateAvatar'
+])->name('profile.avatar');
 Route::get('/profil', [
     ProfileController::class, 'index'
 ])->name('profile.index');
