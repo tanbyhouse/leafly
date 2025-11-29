@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminProductBusukController;
+use App\Http\Controllers\AdminTransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,7 +49,12 @@ Route::prefix('admin')->name('admin.')
 ->group(function () {
     Route::get('/dashboard', [
         DashboardController::class, 'index'])
-        ->name('dashboard');});
+        ->name('dashboard');
+    // route manajemen transaksi
+    Route::resource('transactions', 
+        AdminTransactionController::class, ['names' => 'admin.transactions'])
+        ->only(['index', 'show', 'update']); 
+});
 Route::resource('products', 
     AdminProductController::class, [
     'names' => 'admin.products'
