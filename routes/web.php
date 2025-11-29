@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\AdminProductBusukController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,4 +52,8 @@ Route::prefix('admin')->name('admin.')
 Route::resource('products', 
     AdminProductController::class, [
     'names' => 'admin.products'
+]);
+Route::resource('busuk', 
+    AdminProductBusukController::class, [
+    'names' => 'admin.busuk'
 ]);
