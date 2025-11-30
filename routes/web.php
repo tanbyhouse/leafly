@@ -53,8 +53,8 @@ Route::prefix('admin')->name('admin.')
         DashboardController::class, 'index'])
         ->name('dashboard');
     Route::get('/laporan', [
-        AdminReportController::class, 'index'])
-        ->name('admin.reports.index');
+        AdminLaporanController::class, 'index'])
+        ->name('laporan.index');
     
 });
 Route::resource('products', 
