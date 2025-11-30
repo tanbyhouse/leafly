@@ -74,8 +74,8 @@
                     </div>
                 </div>
 
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Transaksi
+                <a href="{{ route('admin.transactions.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.transactions.*') ? 'bg-white/10 text-white font-bold' : '' }}">
+                   <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Transaksi
                 </a>
 
                 <p class="px-4 text-xs font-bold text-gray-400 uppercase mt-4 mb-2">Lainnya</p>

@@ -9,7 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminProductBusukController;
-use App\Http\Controllers\AdminTransactionController;
+use App\Http\Controllers\AdminTransactionsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,15 +45,14 @@ Route::post('/profile/avatar', [
 Route::get('/profil', [
     ProfileController::class, 'index'
 ])->name('profile.index');
+
 Route::prefix('admin')->name('admin.')
 ->group(function () {
     Route::get('/dashboard', [
         DashboardController::class, 'index'])
         ->name('dashboard');
     // route manajemen transaksi
-    Route::resource('transactions', 
-        AdminTransactionController::class, ['names' => 'admin.transactions'])
-        ->only(['index', 'show', 'update']); 
+    
 });
 Route::resource('products', 
     AdminProductController::class, [
@@ -63,3 +62,6 @@ Route::resource('busuk',
     AdminProductBusukController::class, [
     'names' => 'admin.busuk'
 ]);
+Route::resource('transactions', 
+    AdminTransactionsController::class, ['names' => 'admin.transactions'])
+    ->only(['index', 'show', 'update']); 
