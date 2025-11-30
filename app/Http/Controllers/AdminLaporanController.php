@@ -8,9 +8,10 @@ class AdminLaporanController extends Controller
 {
     public function index()
     {
-        $summary = [
-            'income_this_month' => 4500000,
-            'income_last_month' => 3800000,
+        // laporan penjualan
+        $salesSummary = [
+            'income_month' => 4500000,
+            'income_growth' => 18, 
             'orders_count' => 150,
             'products_sold' => 320
         ];
@@ -20,18 +21,61 @@ class AdminLaporanController extends Controller
             'data' => [1200000, 1900000, 3000000, 5000000, 2000000, 4500000]
         ];
 
-        $chartCategories = [
-            'labels' => ['Benih', 'Nutrisi', 'Media Tanam', 'Alat'],
-            'data' => [45, 25, 20, 10] // Dalam persen
+        // penjualan harian
+        $salesHistory = [
+            ['date' => '2025-11-28', 'id' => 'ORD-001', 'customer' => 'Budi', 'total' => 150000],
+            ['date' => '2025-11-28', 'id' => 'ORD-002', 'customer' => 'Siti', 'total' => 75000],
+            ['date' => '2025-11-27', 'id' => 'ORD-003', 'customer' => 'Rudi', 'total' => 250000],
         ];
 
-        $dailyReports = [
-            ['date' => '2025-11-28', 'orders' => 12, 'income' => 1500000, 'items' => 25],
-            ['date' => '2025-11-27', 'orders' => 8, 'income' => 850000, 'items' => 14],
-            ['date' => '2025-11-26', 'orders' => 15, 'income' => 2100000, 'items' => 30],
-            ['date' => '2025-11-25', 'orders' => 5, 'income' => 450000, 'items' => 8],
+
+        // laporan pembelian
+        $purchaseSummary = [
+            'expense_month' => 1200000,
+            'items_restocked' => 50,
+            'biggest_expense' => 'Alat Hidroponik' 
         ];
 
-        return view('admin.laporan.index', compact('summary', 'chartSales', 'chartCategories', 'dailyReports'));
+        $chartExpense = [
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+            'data' => [500000, 300000, 800000, 200000, 1500000, 1200000]
+        ];
+
+        // riwayat pembelian
+        $purchaseHistory = [
+            [
+                'date' => '2025-11-25',
+                'item' => 'Restock Rockwool 1 Ball',
+                'category' => 'Media Tanam',
+                'supplier' => 'CV. Tani Jaya',
+                'cost' => 500000
+            ],
+            [
+                'date' => '2025-11-20',
+                'item' => 'Benih Selada Import (10 Pack)',
+                'category' => 'Benih',
+                'supplier' => 'Importir Benih',
+                'cost' => 350000
+            ],
+            [
+                'date' => '2025-11-15',
+                'item' => 'Netpot 5cm (1000 pcs)',
+                'category' => 'Alat',
+                'supplier' => 'Plastik Abadi',
+                'cost' => 200000
+            ],
+            [
+                'date' => '2025-11-10',
+                'item' => 'Nutrisi AB Mix 5L',
+                'category' => 'Nutrisi',
+                'supplier' => 'Hidroponik Surabaya',
+                'cost' => 150000
+            ]
+        ];
+
+        return view('admin.laporan.index', compact(
+            'salesSummary', 'chartSales', 'salesHistory',
+            'purchaseSummary', 'chartExpense', 'purchaseHistory'
+        ));
     }
 }
