@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminProductBusukController;
 use App\Http\Controllers\AdminTransactionsController;
+use App\Http\Controllers\AdminLaporanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,7 +52,9 @@ Route::prefix('admin')->name('admin.')
     Route::get('/dashboard', [
         DashboardController::class, 'index'])
         ->name('dashboard');
-    // route manajemen transaksi
+    Route::get('/laporan', [
+        AdminReportController::class, 'index'])
+        ->name('admin.reports.index');
     
 });
 Route::resource('products', 
