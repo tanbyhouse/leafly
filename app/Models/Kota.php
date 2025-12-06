@@ -14,6 +14,7 @@ class Kota extends Model
         'kode_kota',
         'nama_kota',
         'tipe',
+        'rajaongkir_id', // TAMBAHAN
     ];
 
     public function provinsi()

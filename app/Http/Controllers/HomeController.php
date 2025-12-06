@@ -1,23 +1,22 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Get featured products
+        // Get featured products from database
         $featuredProducts = Produk::with(['kategori', 'fotoUtama'])
             ->where('is_aktif', true)
-            ->orderBy('created_at', 'desc')
+            ->inRandomOrder()
             ->take(3)
             ->get();
 
         return view('welcome', compact('featuredProducts'));
     }
 }
-
-
-

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -26,4 +28,8 @@ Route::get('/keranjang', [
 ])->name('cart.index');
 Route::get('/checkout', [
     CheckoutController::class, 'index'
+<<<<<<< Updated upstream
 ])->name('checkout.index');
+=======
+])->name('checkout.index');
+>>>>>>> Stashed changes
