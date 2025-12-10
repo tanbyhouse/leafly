@@ -17,12 +17,11 @@
                 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">2</span>
             </a>
             @guest
-                <a href="{{ route('login') }}" class="text-white hover:text-leafly-gold font-medium mr-2">Masuk</a>
-                <a href="{{ route('register') }}" class="bg-leafly-gold text-leafly-dark px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition shadow-lg transform hover:-translate-y-1">
+                <a href="{{ route('register') }}" class="bg-leafly-gold text-leafly-dark px-6 py-2 rounded-full font-bold hover:bg-leafly-green transition shadow-lg transform hover:-translate-y-1">
                     Daftar
                 </a>
-                <a href="{{ route('profile.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
-                    <i class="fa-solid fa-user mr-2"></i> Profil Saya
+                <a href="{{ route('profile.index') }}" class="rounded-full block text-xl text-white hover:text-leafly-green hover:text-leafly-dark">
+                    <i class="fa-solid fa-user mr-2"></i>
                 </a>
             @else
                 <div class="relative group">
