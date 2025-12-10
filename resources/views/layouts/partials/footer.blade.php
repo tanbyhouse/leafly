@@ -17,9 +17,9 @@
         <div>
             <h3 class="text-lg font-bold text-leafly-gold mb-4">Kontak</h3>
             <ul class="space-y-2 text-gray-300 text-sm">
-                <li>📍 Jember, Jawa Timur</li>
-                <li>📧 admin@leafly.id</li>
-                <li>📞 +62 812-3456-7890</li>
+                <li><i class="fa-solid fa-map"></i> Jember, Jawa Timur</li>
+                <li><i class="fa fa-envelope"></i> admin@leafly.id</li>
+                <li><i class="fa fa-phone"></i> +62 812-3456-7890</li>
             </ul>
         </div>
     </div>
