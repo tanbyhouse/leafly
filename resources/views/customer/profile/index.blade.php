@@ -23,7 +23,7 @@
                                 @endif
                             </div>
                             
-                            <button class="absolute bottom-0 right-0 bg-leafly-gold text-leafly-dark w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-yellow-400 transition cursor-pointer">
+                            <button class="absolute bottom-0 right-0 bg-leafly-gold text-leafly-dark w-8 h-8 rounded-full flex items-center justify-center shadow-lg hover:bg-leafly-green transition cursor-pointer">
                                 <i class="fa-solid fa-camera text-xs"></i>
                             </button>
                         </div>
@@ -43,7 +43,7 @@
                             <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-leafly-dark font-medium rounded-lg transition">
                                 <i class="fa-solid fa-map-location-dot w-5"></i> Daftar Alamat
                             </a>
-                            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-leafly-dark font-medium rounded-lg transition">
+                            <a href="#ganti-pw" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-leafly-dark font-medium rounded-lg transition">
                                 <i class="fa-solid fa-lock w-5"></i> Ubah Password
                             </a>
                             <div class="border-t border-gray-100 my-2"></div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div id="ganti-pw" class="bg-white rounded-xl shadow-sm border border-gray-100">
                     <div class="p-6 border-b border-gray-100">
                         <h3 class="font-bold text-leafly-dark text-lg">Keamanan Akun</h3>
                     </div>

@@ -42,6 +42,8 @@
         .animate-fade-in-up {
             animation: fade-in-up 0.8s ease-out forwards;
         }
+        html {scroll-behavior: smooth;}
+        * {transition: all 0.3s ease;}
     </style>
 </head>
 <body class="bg-leafly-cream text-gray-800 flex flex-col min-h-screen">
