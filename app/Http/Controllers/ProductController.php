@@ -44,8 +44,24 @@ class ProductController extends Controller
             'description' => 'Benih selada pilihan dengan tingkat germinasi 98%. Sangat cocok untuk sistem hidroponik NFT, DFT, maupun Wick System. Hasil panen memiliki tekstur renyah, rasa manis, dan bebas rasa pahit. Dikemas dalam aluminium foil untuk menjaga kualitas benih.',
             'stock' => 50,
             'rating' => 4.8,
-            'reviews_count' => 120,
-            'images' => ['fa-seedling', 'fa-plant-wilt', 'fa-leaf']
+            'reviews_count' => 2,
+            'images' => ['fa-seedling', 'fa-plant-wilt', 'fa-leaf'],
+            'reviews' => [
+                [
+                    'user_name' => 'Budi Santoso',
+                    'rating' => 5,
+                    'comment' => 'Benihnya cepat tumbuh, mantap!',
+                    'date' => '2025-11-20',
+                    'avatar' => null
+                ],
+                [
+                    'user_name' => 'Siti Aminah',
+                    'rating' => 4,
+                    'comment' => 'Pengiriman cepat, packing aman.',
+                    'date' => '2025-11-22',
+                    'avatar' => null
+                ]
+            ]
         ];
 
         return view('products.show', compact('product'));
