@@ -11,6 +11,7 @@ use App\Http\Controllers\AdminProductController;
 use App\Http\Controllers\AdminProductBusukController;
 use App\Http\Controllers\AdminTransactionsController;
 use App\Http\Controllers\AdminLaporanController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -68,3 +69,6 @@ Route::resource('busuk',
 Route::resource('transactions', 
     AdminTransactionsController::class, ['names' => 'admin.transactions'])
     ->only(['index', 'show', 'update']); 
+Route::post('/reviews', [
+    ReviewController::class, 'store'])
+    ->name('reviews.store')->middleware('auth');
