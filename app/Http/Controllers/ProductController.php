@@ -61,6 +61,12 @@ class ProductController extends Controller
                     'date' => '2025-11-22',
                     'avatar' => null
                 ]
+            ],
+            'care' => [
+                ['icon' => 'fa-sun', 'title' => 'Cahaya', 'desc' => 'Butuh sinar matahari penuh (min. 6 jam/hari).'],
+                ['icon' => 'fa-droplet', 'title' => 'Penyiraman', 'desc' => 'Siram 2x sehari (pagi & sore) agar tanah lembab.'],
+                ['icon' => 'fa-temperature-half', 'title' => 'Suhu', 'desc' => 'Optimal pada suhu sejuk 20-25°C.'],
+                ['icon' => 'fa-seedling', 'title' => 'Pemupukan', 'desc' => 'Berikan NPK Daun setiap 1 minggu sekali.'],
             ]
         ];
 
