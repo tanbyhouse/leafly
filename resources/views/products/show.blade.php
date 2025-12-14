@@ -104,6 +104,7 @@
                         </div>
                     </form>
 
+                    
                     <!--keterangan tambahan-->
                     <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-100">
                         <div class="flex items-center gap-3 text-sm text-gray-500">
@@ -113,6 +114,23 @@
                             <i class="fa-solid fa-shield-halved text-leafly-dark text-lg"></i> Garansi Tumbuh
                         </div>
                     </div>
+
+                    <!--  chat wa -->
+                    @php
+                        // Ganti nomor ini dengan nomor WhatsApp Admin (format: 628...)
+                        $wa_number = "6282229390075"; 
+                        
+                        // Pesan otomatis
+                        $wa_message = "Halo Admin Leafly, saya ingin bertanya stok atau detail mengenai produk: (" . $product['name'] . ")";
+                        
+                        // Link WhatsApp API
+                        $wa_link = "https://wa.me/" . $wa_number . "?text=" . urlencode($wa_message);
+                    @endphp
+
+                    <a href="{{ $wa_link }}" target="_blank" class="mt-4 w-full flex items-center justify-center gap-2 py-3 text-leafly-dark font-bold rounded-lg bg-leafly-green hover:scale-[1.02] transition duration-300">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> Chat Admin / Tanya Stok
+                    </a>
+
                 </div>
             </div>
             
