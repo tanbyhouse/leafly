@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminProductBusukController;
 use App\Http\Controllers\AdminTransactionsController;
 use App\Http\Controllers\AdminLaporanController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,6 +58,12 @@ Route::prefix('admin')->name('admin.')
         AdminLaporanController::class, 'index'])
         ->name('laporan.index');
         
+    Route::get('/users', [
+        UserController::class, 'index'])
+        ->name('admin.users.index');
+    Route::delete('/users/{id}', [
+        UserController::class, 'destroy'])
+        ->name('admin.users.destroy');
     });
 Route::resource('products', 
     AdminProductController::class, [
@@ -72,12 +79,3 @@ Route::resource('transactions',
 Route::post('/reviews', [
     ReviewController::class, 'store'])
     ->name('reviews.store')->middleware('auth');
-
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/users', [
-        UserController::class, 'index'])
-        ->name('admin.users.index');
-    Route::delete('/users/{id}', [
-        UserController::class, 'destroy'])
-        ->name('admin.users.destroy');
-});
