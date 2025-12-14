@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
-use App\Models\Kategori;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -11,8 +11,8 @@ class HomeController extends Controller
     public function index()
     {
         // Get featured products from database
-        $featuredProducts = Produk::with(['kategori', 'fotoUtama'])
-            ->where('is_aktif', true)
+        $featuredProducts = Product::with(['category', 'fotoUtama'])
+            ->where('is_active', true)
             ->inRandomOrder()
             ->take(3)
             ->get();

@@ -18,7 +18,7 @@
 
                         <div
                             class="hidden md:grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-200 text-sm font-bold text-gray-500 uppercase">
-                            <div class="col-span-6">Produk</div>
+                            <div class="col-span-6">product</div>
                             <div class="col-span-2 text-center">Harga</div>
                             <div class="col-span-2 text-center">Jumlah</div>
                             <div class="col-span-2 text-center">Total</div>
@@ -29,9 +29,9 @@
                         <div class="divide-y divide-gray-100" id="cart-container">
                             @forelse($cartItems as $item)
                                 <div class="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center cart-item"
-                                    data-price="{{ $item->produk->harga }}" data-id="{{ $item->id }}">
+                                    data-price="{{ $item->product->harga }}" data-id="{{ $item->id }}">
 
-                                    <!-- info produk -->
+                                    <!-- info product -->
                                     <div class="col-span-6 flex items-center gap-4">
 
                                         <form action="{{ route('cart.remove', $item->id) }}" method="POST" class="inline">
@@ -45,9 +45,9 @@
 
                                         <div
                                             class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
-                                            @if($item->produk->fotoProduks->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $item->produk->fotoProduks->first()->path_foto) }}"
-                                                    alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                                            @if($item->product->images->isNotEmpty())
+                                                <img src="{{ asset('storage/' . $item->product->images->first()->path_foto) }}"
+                                                    alt="{{ $item->product->nama_product }}" class="w-full h-full object-cover">
                                             @else
                                                 <i class="fa-solid fa-seedling text-2xl text-leafly-green"></i>
                                             @endif
@@ -55,18 +55,18 @@
 
                                         <div>
                                             <h3 class="font-bold text-leafly-dark text-sm md:text-base">
-                                                {{ $item->produk->nama_produk }}
+                                                {{ $item->product->nama_product }}
                                             </h3>
-                                            <p class="text-xs text-gray-500">{{ $item->produk->kategori->nama_kategori }}</p>
+                                            <p class="text-xs text-gray-500">{{ $item->product->category->nama_category}}</p>
                                             <p class="text-xs text-gray-500 md:hidden">Rp
-                                                {{ number_format($item->produk->harga, 0, ',', '.') }}
+                                                {{ number_format($item->product->harga, 0, ',', '.') }}
                                             </p>
                                         </div>
                                     </div>
 
                                     <!-- harga satuan -->
                                     <div class="col-span-2 text-center text-gray-600 hidden md:block">
-                                        Rp {{ number_format($item->produk->harga, 0, ',', '.') }}
+                                        Rp {{ number_format($item->product->harga, 0, ',', '.') }}
                                     </div>
 
                                     <!-- input jumlah -->
@@ -75,7 +75,7 @@
                                             <button type="button"
                                                 class="w-8 h-full bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-l-lg btn-minus">-</button>
                                             <input type="number" value="{{ $item->jumlah }}" min="1"
-                                                max="{{ $item->produk->stok }}"
+                                                max="{{ $item->product->stok }}"
                                                 class="w-8 h-full text-center border-none focus:ring-0 p-0 text-sm font-bold text-leafly-dark input-qty"
                                                 readonly>
                                             <button type="button"
@@ -85,7 +85,7 @@
 
                                     <!-- subtotal -->
                                     <div class="col-span-2 text-center font-bold text-leafly-dark subtotal-text">
-                                        Rp {{ number_format($item->produk->harga * $item->jumlah, 0, ',', '.') }}
+                                        Rp {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}
                                     </div>
                                 </div>
                             @empty

@@ -5,70 +5,68 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
+        'name',
         'email',
+        'phone',
         'password',
-        'tipe_user',
-        'aktif',
+        'is_active'
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $with = ['roles'];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'aktif' => 'boolean',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    public function admin()
+    protected $casts = ['is_active' => 'boolean'];
+
+    public function roles()
     {
-        return $this->hasOne(Admin::class);
+        return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function karyawan()
+    public function addresses()
     {
-        return $this->hasOne(Karyawan::class);
+        return $this->hasMany(Address::class);
     }
 
-    public function pelanggan()
+    public function orders()
     {
-        return $this->hasOne(Pelanggan::class);
+        return $this->hasMany(Order::class);
     }
 
-    public function notifikasis()
+    public function hasRole(string $role): bool
     {
-        return $this->hasMany(Notifikasi::class);
+        return $this->roles()->where('name', $role)->exists();
     }
 
-    public function produkRusaks()
+    public function hasAnyRole(array $roles): bool
     {
-        return $this->hasMany(ProdukRusak::class, 'dilaporkan_oleh');
+        return $this->roles()->whereIn('name', $roles)->exists();
     }
 
-    public function pesansDikirim()
+    public function notifications()
     {
-        return $this->hasMany(Pesan::class, 'pengirim_id');
+        return $this->hasMany(Notification::class);
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        return $this->tipe_user === 'admin';
+        return $this->hasRole('admin');
     }
 
-    public function isKaryawan()
+    public function isKaryawan(): bool
     {
-        return $this->tipe_user === 'karyawan';
+        return $this->hasRole('karyawan');
     }
 
-    public function isPelanggan()
+    public function isPelanggan(): bool
     {
-        return $this->tipe_user === 'pelanggan';
+        return $this->hasRole('pelanggan');
     }
 }

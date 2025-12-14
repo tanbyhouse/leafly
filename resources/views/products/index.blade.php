@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Katalog Produk - Leafly')
+@section('title', 'Katalog Product - Leafly')
 
 @section('content')
 <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -8,7 +8,7 @@
 
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-leafly-dark">Katalog Produk</h1>
+                <h1 class="text-3xl font-bold text-leafly-dark">Katalog Product</h1>
                 <p class="text-gray-600">Temukan bibit dan alat terbaik untuk kebunmu.</p>
             </div>
 
@@ -47,9 +47,9 @@
                             </a>
                         </div>
 
-                        <!-- kategori -->
+                        <!-- category -->
                         <div class="mb-6">
-                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">Jenis Produk</h4>
+                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">Jenis Product</h4>
                             <div class="space-y-3">
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <input type="checkbox"
@@ -121,7 +121,7 @@
             <div class="w-full lg:w-3/4">
                 <!-- sorting -->
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-gray-500">Menampilkan {{ $products->count() }} dari {{ $products->total() }} produk</span>
+                    <span class="text-sm text-gray-500">Menampilkan {{ $products->count() }} dari {{ $products->total() }} product</span>
                     <form action="{{ route('products.index') }}" method="GET" class="inline">
                         @foreach(request()->except('sort') as $key => $value)
                             @if(is_array($value))
@@ -146,10 +146,10 @@
                 @if($products->isEmpty())
                     <div class="bg-white rounded-xl shadow-sm p-12 text-center">
                         <i class="fa-solid fa-box-open text-6xl text-gray-300 mb-4"></i>
-                        <h2 class="text-2xl font-bold text-gray-700 mb-2">Produk Tidak Ditemukan</h2>
+                        <h2 class="text-2xl font-bold text-gray-700 mb-2">Product Tidak Ditemukan</h2>
                         <p class="text-gray-500 mb-4">Coba ubah filter atau kata kunci pencarian Anda</p>
                         <a href="{{ route('products.index') }}" class="inline-block bg-leafly-dark text-white px-6 py-3 rounded-lg hover:bg-leafly-green hover:text-leafly-dark transition font-bold">
-                            Lihat Semua Produk
+                            Lihat Semua Product
                         </a>
                     </div>
                 @else
@@ -158,9 +158,9 @@
                         <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition duration-300 group overflow-hidden border border-gray-100 flex flex-col h-full">
 
                             <a href="{{ route('products.show', $product->id) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer">
-                                @if($product->fotoProduks->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $product->fotoProduks->first()->path_foto) }}"
-                                         alt="{{ $product->nama_produk }}"
+                                @if($product->images->isNotEmpty())
+                                    <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
+                                         alt="{{ $product->nama_product }}"
                                          class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                 @else
                                     <i class="fa-solid fa-seedling text-6xl text-leafly-green/50 group-hover:scale-110 transition duration-500"></i>
@@ -178,10 +178,10 @@
                             </a>
 
                             <div class="p-4 flex flex-col grow">
-                                <div class="text-xs text-gray-500 mb-1">{{ $product->kategori->nama_kategori }}</div>
+                                <div class="text-xs text-gray-500 mb-1">{{ $product->category->nama_category }}</div>
 
                                 <a href="{{ route('products.show', $product->id) }}" class="hover:text-leafly-green transition">
-                                    <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight line-clamp-2">{{ $product->nama_produk }}</h3>
+                                    <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight line-clamp-2">{{ $product->nama_product }}</h3>
                                 </a>
 
                                 <p class="text-sm text-gray-500 line-clamp-2 mb-2">{{ Str::limit($product->deskripsi, 60) }}</p>
@@ -217,7 +217,7 @@
 
 {{-- @extends('layouts.app')
 
-@section('title', 'Katalog Produk - Leafly')
+@section('title', 'Katalog Product - Leafly')
 
 @section('content')
 <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -225,7 +225,7 @@
 
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-leafly-dark">Katalog Produk</h1>
+                <h1 class="text-3xl font-bold text-leafly-dark">Katalog Product</h1>
                 <p class="text-gray-600">Temukan bibit dan alat terbaik untuk kebunmu.</p>
             </div>
 
@@ -256,9 +256,9 @@
                             </a>
                         </div>
 
-                        <!-- kategori -->
+                        <!-- category -->
                         <div class="mb-6">
-                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">Kategori</h4>
+                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">category</h4>
                             <div class="space-y-3">
 
                                 <label class="flex items-center gap-3 cursor-pointer group">
@@ -307,7 +307,7 @@
             <div class="w-full lg:w-3/4">
                 <!-- sorting -->
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-gray-500">Menampilkan 9 produk</span>
+                    <span class="text-sm text-gray-500">Menampilkan 9 product</span>
                     <select class="text-sm border-gray-300 rounded-md focus:ring-leafly-green focus:border-leafly-green">
                         <option>Terbaru</option>
                         <option>Termurah</option>

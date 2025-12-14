@@ -31,7 +31,7 @@ class CheckoutController extends Controller
     {
         $pelanggan = Auth::user()->pelanggan;
 
-        $cartItems = Keranjang::with(['produk.fotoProduks', 'produk.kategori'])
+        $cartItems = Keranjang::with(['product.images', 'product.category'])
             ->where('pelanggan_id', $pelanggan->id)
             ->get();
 
@@ -41,9 +41,9 @@ class CheckoutController extends Controller
         }
 
         foreach ($cartItems as $item) {
-            if ($item->produk->stok < $item->jumlah) {
+            if ($item->product->stok < $item->jumlah) {
                 return redirect()->route('cart.index')
-                    ->with('error', 'Stok ' . $item->produk->nama_produk . ' tidak mencukupi');
+                    ->with('error', 'Stok ' . $item->product->nama_product . ' tidak mencukupi');
             }
         }
 
@@ -52,7 +52,7 @@ class CheckoutController extends Controller
             ->get();
 
         $subtotal = $cartItems->sum(function ($item) {
-            return $item->produk->harga * $item->jumlah;
+            return $item->product->harga * $item->jumlah;
         });
 
         $adminFee = 1000;
@@ -82,7 +82,7 @@ class CheckoutController extends Controller
 
         $pelanggan = Auth::user()->pelanggan;
 
-        $cartItems = Keranjang::with('produk')
+        $cartItems = Keranjang::with('product')
             ->where('pelanggan_id', $pelanggan->id)
             ->get();
 
@@ -95,7 +95,7 @@ class CheckoutController extends Controller
             $alamat = $this->createOrGetAddress($request, $pelanggan->id);
 
             $subtotal = $cartItems->sum(function ($item) {
-                return $item->produk->harga * $item->jumlah;
+                return $item->product->harga * $item->jumlah;
             });
 
             $ongkosKirim = $request->courier === 'express' ? 20000 : 10000;
@@ -126,21 +126,21 @@ class CheckoutController extends Controller
             ]);
 
             foreach ($cartItems as $item) {
-                if ($item->produk->stok < $item->jumlah) {
-                    throw new \Exception('Stok ' . $item->produk->nama_produk . ' tidak mencukupi');
+                if ($item->product->stok < $item->jumlah) {
+                    throw new \Exception('Stok ' . $item->product->nama_product . ' tidak mencukupi');
                 }
 
                 DetailPesanan::create([
                     'pesanan_id' => $pesanan->id,
-                    'produk_id' => $item->produk_id,
-                    'nama_produk' => $item->produk->nama_produk,
-                    'kode_produk' => $item->produk->kode_produk,
-                    'harga' => $item->produk->harga,
+                    'product_id' => $item->product_id,
+                    'nama_product' => $item->product->nama_product,
+                    'kode_product' => $item->product->kode_product,
+                    'harga' => $item->product->harga,
                     'jumlah' => $item->jumlah,
-                    'subtotal' => $item->produk->harga * $item->jumlah,
+                    'subtotal' => $item->product->harga * $item->jumlah,
                 ]);
 
-                $item->produk->decrement('stok', $item->jumlah);
+                $item->product->decrement('stok', $item->jumlah);
             }
 
             $pembayaran = Pembayaran::create([
@@ -248,7 +248,7 @@ class CheckoutController extends Controller
         $pelanggan = Auth::user()->pelanggan;
 
         $pesanan = Pesanan::with([
-            'detailPesanans.produk.fotoProduks',
+            'detailPesanans.product.images',
             'alamat.provinsi',
             'alamat.kota',
             'alamat.kecamatan',

@@ -59,7 +59,7 @@
     <!-- product section -->
     {{-- <section id="products" class="py-20 px-6 bg-white">
         <div class="text-center mb-12 animate-on-scroll">
-            <h2 class="text-3xl md:text-4xl font-bold text-leafly-dark mb-3">Produk Terlaris</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-leafly-dark mb-3">Product Terlaris</h2>
             <div class="w-24 h-1.5 bg-leafly-gold mx-auto rounded-full"></div>
             <p class="text-gray-600 mt-4 max-w-xl mx-auto">Pilihan favorit pelanggan kami untuk memulai kebun impian Anda di
                 rumah.</p>
@@ -163,7 +163,7 @@
     <!-- product section -->
     <section id="products" class="py-20 px-6 bg-white">
         <div class="text-center mb-12 animate-on-scroll">
-            <h2 class="text-3xl md:text-4xl font-bold text-leafly-dark mb-3">Produk Terlaris</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-leafly-dark mb-3">Product Terlaris</h2>
             <div class="w-24 h-1.5 bg-leafly-gold mx-auto rounded-full"></div>
             <p class="text-gray-600 mt-4 max-w-xl mx-auto">Pilihan favorit pelanggan kami untuk memulai kebun impian Anda di
                 rumah.</p>
@@ -171,8 +171,8 @@
 
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             @php
-                $featuredProducts = \App\Models\Produk::with(['kategori', 'fotoProduks', 'penilaianProduks'])
-                    ->where('is_aktif', true)
+                $featuredProducts = \App\Models\Product::with(['category', 'images', 'reviews'])
+                    ->where('is_active', true)
                     ->inRandomOrder()
                     ->limit(3)
                     ->get();
@@ -182,9 +182,9 @@
                 <div
                     class="group bg-leafly-cream rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition duration-300">
                     <div class="relative h-72 overflow-hidden">
-                        @if($product->fotoProduks->isNotEmpty())
-                            <img src="{{ asset('storage/' . $product->fotoProduks->first()->path_foto) }}"
-                                alt="{{ $product->nama_produk }}"
+                        @if($product->images->isNotEmpty())
+                            <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
+                                alt="{{ $product->nama_Product }}"
                                 class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 ease-in-out">
                         @else
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -192,7 +192,7 @@
                             </div>
                         @endif
 
-                        @if($product->penilaianProduks->count() > 5)
+                        @if($product->reviews->count() > 5)
                             <div
                                 class="absolute top-4 right-4 bg-leafly-gold text-leafly-dark text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
                                 Terlaris</div>
@@ -201,14 +201,14 @@
 
                     <div class="p-6 relative">
                         <span
-                            class="text-sm text-leafly-green font-medium mb-1 block">{{ $product->kategori->nama_kategori }}</span>
-                        <h3 class="text-xl font-bold text-leafly-dark mb-2">{{ $product->nama_produk }}</h3>
+                            class="text-sm text-leafly-green font-medium mb-1 block">{{ $product->category->nama_category }}</span>
+                        <h3 class="text-xl font-bold text-leafly-dark mb-2">{{ $product->nama_Product }}</h3>
 
                         <!-- rating -->
                         <div class="flex items-center mb-3">
                             @php
-                                $avgRating = $product->penilaianProduks->avg('rating') ?? 0;
-                                $reviewCount = $product->penilaianProduks->count();
+                                $avgRating = $product->reviews->avg('rating') ?? 0;
+                                $reviewCount = $product->reviews->count();
                             @endphp
                             <span class="text-leafly-gold">
                                 @for($i = 1; $i <= 5; $i++)
@@ -239,7 +239,7 @@
         <div class="text-center mt-12">
             <a href="{{ route('products.index') }}"
                 class="inline-block px-8 py-3 bg-leafly-dark text-white rounded-full font-bold hover:bg-leafly-gold hover:text-leafly-dark transition duration-300 shadow-lg">
-                Lihat Semua Produk <i class="fa-solid fa-arrow-right ml-2"></i>
+                Lihat Semua Product <i class="fa-solid fa-arrow-right ml-2"></i>
             </a>
         </div>
     </section>
@@ -266,7 +266,7 @@
                 </ul>
                 <a href="{{ route('products.index') }}"
                     class="inline-block px-6 py-3 bg-leafly-green text-leafly-dark rounded-full font-bold hover:bg-leafly-gold transition duration-300">Lihat
-                    Produk Kami</a>
+                    Product Kami</a>
             </div>
         </div>
     </section>

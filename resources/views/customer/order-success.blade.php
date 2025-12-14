@@ -45,20 +45,20 @@
                 </div>
 
                 <!-- Items -->
-                <h3 class="font-bold text-lg mb-4 text-leafly-dark">Produk yang Dibeli</h3>
+                <h3 class="font-bold text-lg mb-4 text-leafly-dark">product yang Dibeli</h3>
                 <div class="space-y-3 mb-6">
                     @foreach($pesanan->detailPesanans as $detail)
                     <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
                         <div class="w-16 h-16 bg-gray-200 rounded flex items-center justify-center">
-                            @if($detail->produk && $detail->produk->fotoProduks->isNotEmpty())
-                                <img src="{{ asset('storage/' . $detail->produk->fotoProduks->first()->path_foto) }}"
-                                     alt="{{ $detail->nama_produk }}" class="w-full h-full object-cover rounded">
+                            @if($detail->product && $detail->product->images->isNotEmpty())
+                                <img src="{{ asset('storage/' . $detail->product->images->first()->path_foto) }}"
+                                     alt="{{ $detail->nama_product }}" class="w-full h-full object-cover rounded">
                             @else
                                 <i class="fa-solid fa-seedling text-2xl text-leafly-green"></i>
                             @endif
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-bold">{{ $detail->nama_produk }}</h4>
+                            <h4 class="font-bold">{{ $detail->nama_product }}</h4>
                             <p class="text-sm text-gray-500">{{ $detail->jumlah }}x @ Rp {{ number_format($detail->harga, 0, ',', '.') }}</p>
                         </div>
                         <p class="font-bold text-leafly-dark">
@@ -88,7 +88,7 @@
                     <h3 class="font-bold mb-4">Rincian Pembayaran</h3>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Subtotal Produk</span>
+                            <span class="text-gray-600">Subtotal product</span>
                             <span class="font-medium">Rp {{ number_format($pesanan->subtotal, 0, ',', '.') }}</span>
                         </div>
                         <div class="flex justify-between">

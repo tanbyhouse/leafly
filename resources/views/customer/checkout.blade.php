@@ -160,20 +160,20 @@
                                     <div class="flex gap-3 pb-3 border-b border-gray-100">
                                         <div
                                             class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center shrink-0 overflow-hidden">
-                                            @if($item->produk->fotoProduks->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $item->produk->fotoProduks->first()->path_foto) }}"
-                                                    alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                                            @if($item->product->images->isNotEmpty())
+                                                <img src="{{ asset('storage/' . $item->product->images->first()->path_foto) }}"
+                                                    alt="{{ $item->product->nama_product }}" class="w-full h-full object-cover">
                                             @else
                                                 <i class="fa-solid fa-seedling text-leafly-green"></i>
                                             @endif
                                         </div>
                                         <div class="grow">
                                             <h4 class="text-sm font-bold text-gray-800 line-clamp-1">
-                                                {{ $item->produk->nama_produk }}</h4>
+                                                {{ $item->product->nama_product }}</h4>
                                             <div class="flex justify-between text-xs text-gray-500 mt-1">
                                                 <span>{{ $item->jumlah }}x</span>
                                                 <span>Rp
-                                                    {{ number_format($item->produk->harga * $item->jumlah, 0, ',', '.') }}</span>
+                                                    {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -183,7 +183,7 @@
                             {{-- Rincian Biaya --}}
                             <div class="space-y-2 border-t border-gray-100 pt-4 text-sm text-gray-600 mb-6">
                                 <div class="flex justify-between">
-                                    <span>Subtotal Produk</span>
+                                    <span>Subtotal product</span>
                                     <span id="subtotal-display">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="flex justify-between">

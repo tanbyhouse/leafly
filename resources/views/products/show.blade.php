@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->nama_produk . ' - Leafly')
+@section('title', $product->nama_product . ' - Leafly')
 
 @section('content')
     <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -10,9 +10,9 @@
             <nav class="flex text-sm text-gray-500 mb-6">
                 <a href="{{ route('home') }}" class="hover:text-leafly-dark">Home</a>
                 <span class="mx-2">/</span>
-                <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Produk</a>
+                <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Product</a>
                 <span class="mx-2">/</span>
-                <span class="text-leafly-dark font-bold truncate">{{ $product->nama_produk }}</span>
+                <span class="text-leafly-dark font-bold truncate">{{ $product->nama_product }}</span>
             </nav>
 
             {{-- Success/Error Messages --}}
@@ -35,20 +35,20 @@
                     <div>
                         <div
                             class="bg-gray-100 rounded-lg aspect-square flex items-center justify-center mb-4 overflow-hidden">
-                            @if($product->fotoProduks->isNotEmpty())
-                                <img src="{{ asset('storage/' . $product->fotoProduks->first()->path_foto) }}"
-                                    alt="{{ $product->nama_produk }}" class="w-full h-full object-cover">
+                            @if($product->images->isNotEmpty())
+                                <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
+                                    alt="{{ $product->nama_product }}" class="w-full h-full object-cover">
                             @else
                                 <i class="fa-solid fa-seedling text-9xl text-leafly-green"></i>
                             @endif
                         </div>
 
-                        @if($product->fotoProduks->count() > 1)
+                        @if($product->images->count() > 1)
                             <div class="grid grid-cols-4 gap-2">
-                                @foreach($product->fotoProduks as $foto)
+                                @foreach($product->images as $foto)
                                     <div
                                         class="bg-gray-100 rounded aspect-square overflow-hidden cursor-pointer hover:ring-2 ring-leafly-gold">
-                                        <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_produk }}"
+                                        <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_product }}"
                                             class="w-full h-full object-cover">
                                     </div>
                                 @endforeach
@@ -59,11 +59,11 @@
                     <!-- Product Info -->
                     <div>
                         <span class="text-sm bg-leafly-green text-leafly-dark px-3 py-1 rounded-full font-medium">
-                            {{ $product->kategori->nama_kategori }}
+                            {{ $product->category->nama_category }}
                         </span>
 
                         <h1 class="text-3xl font-bold text-leafly-dark mt-4 mb-2">
-                            {{ $product->nama_produk }}
+                            {{ $product->nama_product }}
                         </h1>
 
                         <div class="flex items-center gap-4 mb-4">
@@ -97,18 +97,18 @@
                             </div>
                             <div>
                                 <span class="text-gray-500">Jenis:</span>
-                                <span class="font-bold">{{ ucfirst($product->jenis_produk) }}</span>
+                                <span class="font-bold">{{ ucfirst($product->jenis_product) }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-500">Kode:</span>
-                                <span class="font-bold">{{ $product->kode_produk }}</span>
+                                <span class="font-bold">{{ $product->kode_product }}</span>
                             </div>
                         </div>
 
                         @auth
                             <form action="{{ route('cart.add') }}" method="POST" class="space-y-4">
                                 @csrf
-                                <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                                 <div class="flex items-center gap-4">
                                     <label class="text-gray-700 font-medium">Jumlah:</label>
@@ -134,7 +134,7 @@
                                 <p class="text-sm text-yellow-700">
                                     <i class="fa-solid fa-info-circle mr-2"></i>
                                     Silakan <a href="{{ route('login') }}" class="font-bold underline">login</a> untuk
-                                    menambahkan produk ke keranjang
+                                    menambahkan product ke keranjang
                                 </p>
                             </div>
                         @endauth
@@ -147,7 +147,7 @@
                         <h3 class="text-2xl font-bold text-leafly-dark mb-6">Ulasan Pelanggan</h3>
 
                         <div class="space-y-4">
-                            @foreach($product->penilaianProduks->take(5) as $review)
+                            @foreach($product->reviews->take(5) as $review)
                                 <div class="border-b pb-4">
                                     <div class="flex items-center gap-2 mb-2">
                                         <span class="font-bold">{{ $review->pelanggan->nama }}</span>
@@ -172,21 +172,21 @@
             <!-- Related Products -->
             @if($relatedProducts->isNotEmpty())
                 <div class="mt-12">
-                    <h3 class="text-2xl font-bold text-leafly-dark mb-6">Produk Terkait</h3>
+                    <h3 class="text-2xl font-bold text-leafly-dark mb-6">Product Terkait</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @foreach($relatedProducts as $related)
                             <a href="{{ route('products.show', $related->id) }}"
                                 class="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
                                 <div
                                     class="bg-gray-100 rounded aspect-square mb-3 flex items-center justify-center overflow-hidden">
-                                    @if($related->fotoProduks->isNotEmpty())
-                                        <img src="{{ asset('storage/' . $related->fotoProduks->first()->path_foto) }}"
-                                            alt="{{ $related->nama_produk }}" class="w-full h-full object-cover">
+                                    @if($related->images->isNotEmpty())
+                                        <img src="{{ asset('storage/' . $related->images->first()->path_foto) }}"
+                                            alt="{{ $related->nama_product }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="fa-solid fa-seedling text-4xl text-leafly-green"></i>
                                     @endif
                                 </div>
-                                <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_produk }}</h4>
+                                <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_product }}</h4>
                                 <p class="text-leafly-dark font-bold">Rp {{ number_format($related->harga, 0, ',', '.') }}</p>
                             </a>
                         @endforeach
@@ -214,7 +214,7 @@
 
 {{-- @extends('layouts.app')
 
-@section('title', $product->nama_produk . ' - Leafly')
+@section('title', $product->nama_product . ' - Leafly')
 
 @section('content')
 <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -223,9 +223,9 @@
         <nav class="flex text-sm text-gray-500 mb-6">
             <a href="{{ route('home') }}" class="hover:text-leafly-dark">Home</a>
             <span class="mx-2">/</span>
-            <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Produk</a>
+            <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Product</a>
             <span class="mx-2">/</span>
-            <span class="text-leafly-dark font-bold">{{ $product->nama_produk }}</span>
+            <span class="text-leafly-dark font-bold">{{ $product->nama_product }}</span>
         </nav>
 
         <div class="bg-white rounded-2xl shadow-md overflow-hidden">
@@ -235,20 +235,20 @@
                 <div>
                     <div
                         class="bg-gray-100 rounded-lg aspect-square flex items-center justify-center mb-4 overflow-hidden">
-                        @if($product->fotoProduks->isNotEmpty())
-                        <img src="{{ asset('storage/' . $product->fotoProduks->first()->path_foto) }}"
-                            alt="{{ $product->nama_produk }}" class="w-full h-full object-cover">
+                        @if($product->images->isNotEmpty())
+                        <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
+                            alt="{{ $product->nama_product }}" class="w-full h-full object-cover">
                         @else
                         <i class="fa-solid fa-seedling text-9xl text-leafly-green"></i>
                         @endif
                     </div>
 
-                    @if($product->fotoProduks->count() > 1)
+                    @if($product->images->count() > 1)
                     <div class="grid grid-cols-4 gap-2">
-                        @foreach($product->fotoProduks as $foto)
+                        @foreach($product->images as $foto)
                         <div
                             class="bg-gray-100 rounded aspect-square overflow-hidden cursor-pointer hover:ring-2 ring-leafly-gold">
-                            <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_produk }}"
+                            <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_product }}"
                                 class="w-full h-full object-cover">
                         </div>
                         @endforeach
@@ -259,11 +259,11 @@
                 <!-- Product Info -->
                 <div>
                     <span class="text-sm bg-leafly-green text-leafly-dark px-3 py-1 rounded-full font-medium">
-                        {{ $product->kategori->nama_kategori }}
+                        {{ $product->category->nama_category }}
                     </span>
 
                     <h1 class="text-3xl font-bold text-leafly-dark mt-4 mb-2">
-                        {{ $product->nama_produk }}
+                        {{ $product->nama_product }}
                     </h1>
 
                     <div class="flex items-center gap-4 mb-4">
@@ -297,17 +297,17 @@
                         </div>
                         <div>
                             <span class="text-gray-500">Jenis:</span>
-                            <span class="font-bold">{{ ucfirst($product->jenis_produk) }}</span>
+                            <span class="font-bold">{{ ucfirst($product->jenis_product) }}</span>
                         </div>
                         <div>
                             <span class="text-gray-500">Kode:</span>
-                            <span class="font-bold">{{ $product->kode_produk }}</span>
+                            <span class="font-bold">{{ $product->kode_product }}</span>
                         </div>
                     </div>
 
                     <form action="{{ route('cart.add') }}" method="POST" class="space-y-4">
                         @csrf
-                        <input type="hidden" name="produk_id" value="{{ $product->id }}">
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
 
                         <div class="flex items-center gap-4">
                             <label class="text-gray-700 font-medium">Jumlah:</label>
@@ -337,7 +337,7 @@
                 <h3 class="text-2xl font-bold text-leafly-dark mb-6">Ulasan Pelanggan</h3>
 
                 <div class="space-y-4">
-                    @foreach($product->penilaianProduks->take(5) as $review)
+                    @foreach($product->reviews->take(5) as $review)
                     <div class="border-b pb-4">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="font-bold">{{ $review->pelanggan->nama }}</span>
@@ -359,21 +359,21 @@
         <!-- Related Products -->
         @if($relatedProducts->isNotEmpty())
         <div class="mt-12">
-            <h3 class="text-2xl font-bold text-leafly-dark mb-6">Produk Terkait</h3>
+            <h3 class="text-2xl font-bold text-leafly-dark mb-6">Product Terkait</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($relatedProducts as $related)
                 <a href="{{ route('products.show', $related->id) }}"
                     class="bg-white rounded-lg shadow hover:shadow-lg transition p-4">
                     <div
                         class="bg-gray-100 rounded aspect-square mb-3 flex items-center justify-center overflow-hidden">
-                        @if($related->fotoProduks->isNotEmpty())
-                        <img src="{{ asset('storage/' . $related->fotoProduks->first()->path_foto) }}"
-                            alt="{{ $related->nama_produk }}" class="w-full h-full object-cover">
+                        @if($related->images->isNotEmpty())
+                        <img src="{{ asset('storage/' . $related->images->first()->path_foto) }}"
+                            alt="{{ $related->nama_product }}" class="w-full h-full object-cover">
                         @else
                         <i class="fa-solid fa-seedling text-4xl text-leafly-green"></i>
                         @endif
                     </div>
-                    <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_produk }}</h4>
+                    <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_product }}</h4>
                     <p class="text-leafly-dark font-bold">Rp {{ number_format($related->harga, 0, ',', '.') }}</p>
                 </a>
                 @endforeach

@@ -2,41 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
-use App\Models\Kategori;
-use App\Models\PenilaianProduk;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\ProductReview;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Produk::with(['kategori', 'fotoProduks'])
-            ->where('is_aktif', true);
+        $query = Product::with(['category', 'images'])
+            ->where('is_active', true);
 
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nama_produk', 'like', '%' . $search . '%')
+                $q->where('nama_Product', 'like', '%' . $search . '%')
                     ->orWhere('deskripsi', 'like', '%' . $search . '%')
-                    ->orWhere('kode_produk', 'like', '%' . $search . '%');
+                    ->orWhere('kode_Product', 'like', '%' . $search . '%');
             });
         }
 
         // Filter by category
-        if ($request->filled('kategori')) {
-            $query->where('kategori_id', $request->kategori);
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
         }
 
         // Filter by multiple categories (checkbox)
         if ($request->filled('category') && is_array($request->category)) {
-            $query->whereIn('jenis_produk', $request->category);
+            $query->whereIn('jenis_Product', $request->category);
         }
 
-        // Filter by jenis produk
+        // Filter by jenis Product
         if ($request->filled('jenis')) {
-            $query->where('jenis_produk', $request->jenis);
+            $query->where('jenis_Product', $request->jenis);
         }
 
         // Filter by price range
@@ -66,40 +66,40 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(12)->withQueryString();
-        $categories = Kategori::all();
+        $categories = category::all();
 
         return view('products.index', compact('products', 'categories'));
     }
 
     public function show($id)
     {
-        $product = Produk::with([
-            'kategori',
-            'fotoProduks',
+        $product = Product::with([
+            'category',
+            'images',
             'caraPerawatan',
-            'penilaianProduks.pelanggan.user',
-            'penilaianProduks' => function ($query) {
+            'review.pelanggan.user',
+            'review' => function ($query) {
                 $query->orderBy('created_at', 'desc');
             }
         ])->findOrFail($id);
 
         // Calculate average rating
-        $averageRating = $product->penilaianProduks->avg('rating') ?? 0;
-        $totalReviews = $product->penilaianProduks->count();
+        $averageRating = $product->review->avg('rating') ?? 0;
+        $totalReviews = $product->review->count();
 
         // Rating distribution
         $ratingDistribution = [];
         for ($i = 5; $i >= 1; $i--) {
-            $ratingDistribution[$i] = $product->penilaianProduks
+            $ratingDistribution[$i] = $product->review
                 ->where('rating', $i)
                 ->count();
         }
 
         // Related products
-        $relatedProducts = Produk::with(['kategori', 'fotoProduks'])
-            ->where('kategori_id', $product->kategori_id)
+        $relatedProducts = Product::with(['category', 'images'])
+            ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
-            ->where('is_aktif', true)
+            ->where('is_active', true)
             ->where('stok', '>', 0)
             ->inRandomOrder()
             ->limit(4)
@@ -119,21 +119,21 @@ class ProductController extends Controller
     {
         $query = $request->get('q', '');
 
-        $products = Produk::with(['kategori', 'fotoProduks'])
-            ->where('is_aktif', true)
+        $products = Product::with(['category', 'images'])
+            ->where('is_active', true)
             ->where(function ($q) use ($query) {
-                $q->where('nama_produk', 'like', '%' . $query . '%')
-                    ->orWhere('kode_produk', 'like', '%' . $query . '%');
+                $q->where('nama_Product', 'like', '%' . $query . '%')
+                    ->orWhere('kode_Product', 'like', '%' . $query . '%');
             })
             ->limit(10)
             ->get()
             ->map(function ($product) {
                 return [
                     'id' => $product->id,
-                    'nama' => $product->nama_produk,
+                    'nama' => $product->nama_Product,
                     'harga' => $product->harga,
-                    'foto' => $product->fotoProduks->first()->path_foto ?? null,
-                    'kategori' => $product->kategori->nama_kategori ?? '',
+                    'foto' => $product->images->first()->path_foto ?? null,
+                    'category' => $product->category->nama_category ?? '',
                 ];
             });
 
