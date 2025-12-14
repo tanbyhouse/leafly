@@ -120,6 +120,7 @@
             <div class="border-t border-gray-200 bg-gray-50/50">
                 <div class="flex border-b border-gray-200">
                     <button type="button" class="tab-btn px-8 py-4 text-leafly-dark font-bold border-b-2 border-leafly-dark bg-white" data-target="#tab-detail">Detail Produk</button>
+                    <button type="button" class="tab-btn px-6 md:px-8 py-4 text-gray-500 hover:text-leafly-dark font-medium border-b-2 border-transparent hover:border-gray-300 focus:outline-none transition grow md:grow-0" data-target="#tab-perawatan">Cara Perawatan</button>
                     <button type="button" class="tab-btn px-8 py-4 text-gray-500 hover:text-leafly-dark font-medium transition" data-target="#tab-ulasan">Ulasan Pelanggan ({{ $product['reviews_count'] }})</button>
                 </div>
                 <div id="tab-detail" class="tab-content p-8 md:p-12 bg-white">
@@ -135,6 +136,43 @@
                     <p class="text-gray-600 leading-relaxed">{{ $product['description'] }}</p>
                 </div>
 
+                <!-- tab perawatan -->
+                 <div id="tab-perawatan" class="tab-content hidden p-8 md:p-12 bg-white animate-fade-in-up">
+                    <div class="max-w-4xl">
+                        <h3 class="font-bold text-xl mb-6 text-leafly-dark">Panduan Merawat Tanaman</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @if(isset($product['care']))
+                                @foreach($product['care'] as $care)
+                                <div class="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:border-leafly-green/30 hover:shadow-sm transition bg-gray-50/50">
+                                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-leafly-green shadow-sm text-xl shrink-0">
+                                        <i class="fa-solid {{ $care['icon'] }}"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800 mb-1">{{ $care['title'] }}</h4>
+                                        <p class="text-sm text-gray-600 leading-relaxed">{{ $care['desc'] }}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @else
+                                <p class="text-gray-500 italic">Informasi perawatan belum tersedia untuk produk ini.</p>
+                            @endif
+                        </div>
+
+                        {{-- Tips Tambahan --}}
+                        <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+                            <div class="flex gap-3">
+                                <i class="fa-solid fa-lightbulb text-yellow-500 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Tips Pro:</h4>
+                                    <p class="text-sm text-gray-600">Lakukan pemanenan di pagi hari sebelum matahari terik agar daun tetap segar dan renyah saat disimpan.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- tab-ulasan -->
                 <div id="tab-ulasan" class="tab-content hidden p-8 md:p-12 bg-white animate-fade-in-up">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         
@@ -145,12 +183,14 @@
                                 <p class="text-sm text-gray-500 mb-4">Bagikan pengalamanmu tentang produk ini.</p>
 
                                 @guest
-                                    <div class="text-center py-6">
+                                <div class="text-center py-6">
                                         <i class="fa-solid fa-lock text-3xl text-gray-300 mb-3"></i>
                                         <p class="text-sm text-gray-600 mb-6">Silakan login untuk memberikan ulasan.</p>
                                         <a href="{{ route('login') }}" class="bg-leafly-gold text-leafly-dark px-6 py-2 rounded-full font-bold hover:bg-leafly-green transition shadow-lg transform hover:-translate-y-1">Masuk</a>
                                     </div>
+                                    
                                 @else
+                                        
                                     <form action="{{ route('reviews.store') }}" method="POST">
                                         @csrf
                                         <!-- hidden input products id -->
@@ -225,8 +265,10 @@
 
                     </div>
                 </div>
-
+                
             </div>
+
+
         </div>
     </div>
 </div>
