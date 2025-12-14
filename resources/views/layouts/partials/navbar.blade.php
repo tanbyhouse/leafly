@@ -9,7 +9,7 @@
         
         <div class="hidden md:flex items-center space-x-8">
             <a href="{{ url('/') }}" class="text-white hover:text-leafly-green transition font-medium">Home</a>
-            <a href="#about" class="text-white hover:text-leafly-green transition font-medium">Tentang</a>
+            <a href="{{ request()->is('/') ? '#about' : url('/#about') }}" class="text-white hover:text-leafly-green transition font-medium">Tentang</a>
             <a href="{{ route('products.index') }}" class="text-white hover:text-leafly-green transition font-medium">Produk</a>
                         
             <a href="{{ route('cart.index') }}" class="text-white hover:text-leafly-green transition mr-4 relative">
