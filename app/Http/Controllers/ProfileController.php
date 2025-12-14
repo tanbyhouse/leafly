@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -20,30 +21,44 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update user avatar
+     * Update user biodata
      */
-    public function updateAvatar(Request $request)
+    public function update(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
-        ]);
-
         $user = Auth::user();
 
-        $path = $request->file('avatar')->store('avatars', 'public');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
 
         // delete old avatar if exists
-        if (!empty($user->avatar) && \Storage::disk('public')->exists($user->avatar)) {
-            \Storage::disk('public')->delete($user->avatar);
+        if ($request->hasFile('avatar')) {
+            // Hapus foto lama jika bukan default (opsional)
+            if ($user->avatar && Storage::exists('public/avatars/' . $user->avatar)) {
+                Storage::delete('public/avatars/' . $user->avatar);
+            }
+
+            // Simpan foto baru
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/avatars', $filename);
+
+            $user->avatar = $filename;
         }
 
-        $user->avatar = $path;
         $user->save();
 
-        return back()->with('success', 'Avatar berhasil diperbarui.');
+        return back()->with('success', 'Profil berhasil diperbarui.');
     }
 }

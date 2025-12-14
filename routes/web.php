@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminTransactionsController;
 use App\Http\Controllers\AdminLaporanController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,6 +25,10 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect()->route('login');
+})->name('logout');
 Route::get('/katalog', [
     ProductController::class, 'index'
 ])->name('products.index');
@@ -79,3 +84,30 @@ Route::resource('transactions',
 Route::post('/reviews', [
     ReviewController::class, 'store'])
     ->name('reviews.store')->middleware('auth');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [
+        ProfileController::class, 'index'])
+        ->name('profile.index');
+    Route::put('/profile', [
+        ProfileController::class, 'update'])
+        ->name('profile.update');
+});
+
+use App\Models\User;
+
+// --- ROUTE DARURAT (HAPUS NANTI SETELAH MERGE) ---
+Route::get('/force-login', function () {
+    // Kita ambil user ID 1 (atau user manapun yang ada di database kamu)
+    $user = User::first(); 
+    
+    if (!$user) {
+        return "Error: Belum ada data user di database. Jalankan seeder dulu!";
+    }
+
+    // Perintah sakti untuk login tanpa password
+    Auth::login($user);
+
+    // Redirect langsung ke halaman profil
+    return redirect()->route('profile.index')->with('success', 'Login Paksa Berhasil! Sekarang silakan edit profil.');
+});
