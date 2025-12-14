@@ -56,8 +56,8 @@ Route::prefix('admin')->name('admin.')
     Route::get('/laporan', [
         AdminLaporanController::class, 'index'])
         ->name('laporan.index');
-    
-});
+        
+    });
 Route::resource('products', 
     AdminProductController::class, [
     'names' => 'admin.products'
@@ -72,3 +72,12 @@ Route::resource('transactions',
 Route::post('/reviews', [
     ReviewController::class, 'store'])
     ->name('reviews.store')->middleware('auth');
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/users', [
+        UserController::class, 'index'])
+        ->name('admin.users.index');
+    Route::delete('/users/{id}', [
+        UserController::class, 'destroy'])
+        ->name('admin.users.destroy');
+});
