@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             CareGuideSeeder::class,
             ProductSeeder::class,
             ProductImageSeeder::class,
+            ProductDamageSeeder::class,
             AddressSeeder::class,
             CartSeeder::class,
             OrderSeeder::class,
