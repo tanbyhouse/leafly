@@ -10,13 +10,23 @@ class ProductReviewSeeder extends Seeder
 {
     public function run(): void
     {
-        ProductReview::create([
-            'product_id' => 1, // Benih Cabai Rawit
-            'user_id' => 3,    // Siti Aminah
-            'order_id' => 1,   // ORD-0001
-            'rating' => 5,
-            'review' => 'Benih tumbuh dengan sangat baik dan cepat berbuah.',
-            'is_verified_purchase' => true,
+        ProductReview::insert([
+            [
+                'product_id' => 1,
+                'user_id' => 3,
+                'order_id' => 1,
+                'rating' => 5,
+                'review' => 'Benih tumbuh dengan sangat baik dan cepat berbuah.',
+                'is_verified_purchase' => true,
+            ],
+            [
+                'product_id' => 2,
+                'user_id' => 3,
+                'order_id' => 2,
+                'rating' => 5,
+                'review' => 'Pupuknya sangat bagus, sangat membantu dalam pertumbuhan tanaman',
+                'is_verified_purchase' => true,
+            ],
         ]);
     }
 }

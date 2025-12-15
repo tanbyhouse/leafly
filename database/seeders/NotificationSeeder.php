@@ -10,12 +10,21 @@ class NotificationSeeder extends Seeder
 {
     public function run(): void
     {
-        Notification::create([
-            'user_id' => 3,
-            'type' => 'order_status',
-            'title' => 'Pesanan Diproses',
-            'message' => 'Pesanan ORD-0001 sedang diproses',
-            'data' => json_encode(['order_id' => 1]),
+        Notification::insert([
+            [
+                'user_id' => 3,
+                'type' => 'order_status',
+                'title' => 'Pesanan Diproses',
+                'message' => 'Pesanan ORD-0001 sedang diproses',
+                'data' => json_encode(['order_id' => 1]),
+            ],
+            [
+                'user_id' => 3,
+                'type' => 'order_status',
+                'title' => 'Pesanan Diproses',
+                'message' => 'Pesanan ORD-0002 sedang diproses',
+                'data' => json_encode(['order_id' => 2]),
+            ],
         ]);
     }
 }

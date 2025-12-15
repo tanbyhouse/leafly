@@ -10,10 +10,17 @@ class CartSeeder extends Seeder
 {
     public function run(): void
     {
-        Cart::create([
-            'user_id' => 3,
-            'product_id' => 1,
-            'quantity' => 2,
+        Cart::insert([
+            [
+                'user_id' => 3,
+                'product_id' => 1,
+                'quantity' => 2,
+            ],
+            [
+                'user_id' => 3,
+                'product_id' => 2,
+                'quantity' => 3,
+            ],
         ]);
     }
 }
