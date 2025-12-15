@@ -3,23 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pesanan;
+use App\Models\Produk;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // live statistics
+        $totalSales = (float) Pesanan::where('status_pembayaran', 'dibayar')->sum('total');
+        $totalOrders = Pesanan::count();
+        $totalProducts = Produk::count();
+        $totalCustomers = User::where('tipe_user', 'pelanggan')->count();
+
         $stats = [
-            'total_sales' => 15000000,
-            'total_orders' => 125,
-            'total_products' => 45,
-            'total_customers' => 320
+            'total_sales' => $totalSales,
+            'total_orders' => $totalOrders,
+            'total_products' => $totalProducts,
+            'total_customers' => $totalCustomers,
         ];
 
-        $recent_orders = [
-            ['id' => 'ORD-001', 'user' => 'Budi Santoso', 'total' => 150000, 'status' => 'Menunggu'],
-            ['id' => 'ORD-002', 'user' => 'Siti Aminah', 'total' => 75000, 'status' => 'Dikemas'],
-            ['id' => 'ORD-003', 'user' => 'Rudi Hartono', 'total' => 250000, 'status' => 'Selesai'],
-        ];
+        $recentOrdersModels = Pesanan::with('pelanggan.user')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $recent_orders = $recentOrdersModels->map(function ($o) {
+            return [
+                'id' => $o->id,
+                'user' => optional($o->pelanggan->user)->name ?? ($o->pelanggan_name ?? '—'),
+                'total' => $o->total ?? 0,
+                'status' => $o->status ?? ($o->status_pembayaran ?? 'Menunggu'),
+            ];
+        })->toArray();
 
         return view('admin.dashboard.index', compact('stats', 'recent_orders'));
     }
