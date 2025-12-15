@@ -57,7 +57,7 @@
     <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div class="flex justify-between items-center mb-6">
             <h3 class="font-bold text-lg text-gray-800">Pesanan Terbaru</h3>
-            <a href="#" class="text-sm text-leafly-dark hover:underline">Lihat Semua</a>
+            <a href="{{ route('admin.transactions.index') }}" class="text-sm text-leafly-dark hover:underline">Lihat Semua</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
@@ -95,15 +95,15 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 class="font-bold text-lg text-gray-800 mb-4">Quick Actions</h3>
         <div class="space-y-3">
-            <a href="#" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
+            <a href="{{ route('admin.products.create') }}" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
                 <i class="fa-solid fa-plus bg-white text-gray-600 group-hover:text-leafly-dark w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs shadow-sm"></i>
                 Tambah Produk Baru
             </a>
-            <a href="#" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
+            <a href="{{ route('admin.users.index') }}" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
                 <i class="fa-solid fa-user-plus bg-white text-gray-600 group-hover:text-leafly-dark w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs shadow-sm"></i>
                 Tambah Karyawan
             </a>
-            <a href="#" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
+            <a href="{{ route('admin.laporan.index') }}" class="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-leafly-dark hover:text-white rounded-lg transition duration-300 group">
                 <i class="fa-solid fa-file-export bg-white text-gray-600 group-hover:text-leafly-dark w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs shadow-sm"></i>
                 Export Laporan Bulanan
             </a>
