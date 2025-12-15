@@ -3,7 +3,7 @@
 @section('title', 'Daftar Akun - Leafly')
 
 @section('content')
-<div class="min-h-[85vh] mt-[3rem] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-leafly-cream">
+<div class="min-h-[85vh] mt-12 flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-leafly-cream">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 class="mt-2 text-center text-3xl font-extrabold text-leafly-dark">
             Bergabung Bersama Leafly

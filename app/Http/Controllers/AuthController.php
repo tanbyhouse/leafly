@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         // 🔀 Redirect berdasarkan role
         if ($user->hasRole('admin') || $user->hasRole('karyawan')) {
-            return redirect()->route('dashboard');
+            return redirect()->route('admin.dashboard');
         }
 
         return redirect()->route('home');
