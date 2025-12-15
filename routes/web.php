@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Route::get('/', fn() => view('welcome'))->name('home');
 
@@ -61,3 +63,26 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin,karyawan'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard.index'))->name('dashboard');
 });
+
+Route::patch('/cart/{id}', [CartController::class, 'update'])
+    ->name('cart.update');
+
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->name('dashboard');
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'show'])
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'send'])
+    ->middleware('guest')
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'show'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::post('/reset-password', [ResetPasswordController::class, 'update'])
+    ->middleware('guest')
+    ->name('password.update');

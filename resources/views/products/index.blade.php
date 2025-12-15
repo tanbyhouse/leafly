@@ -70,6 +70,14 @@
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <input type="checkbox"
                                            name="category[]"
+                                           value="pupuk"
+                                           {{ in_array('pupuk', request('category', [])) ? 'checked' : '' }}
+                                           class="w-4 h-4 rounded border-gray-300 text-leafly-dark focus:ring-leafly-green cursor-pointer">
+                                    <span class="text-gray-600 text-sm group-hover:text-leafly-dark transition">Pupuk</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox"
+                                           name="category[]"
                                            value="alat"
                                            {{ in_array('alat', request('category', [])) ? 'checked' : '' }}
                                            class="w-4 h-4 rounded border-gray-300 text-leafly-dark focus:ring-leafly-green cursor-pointer">
@@ -159,7 +167,7 @@
 
                             <a href="{{ route('products.show', $product->id) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer">
                                 @if($product->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
+                                    <img src="{{ asset('storage/' . $product->images->first()->path) }}"
                                          alt="{{ $product->name }}"
                                          class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                 @else

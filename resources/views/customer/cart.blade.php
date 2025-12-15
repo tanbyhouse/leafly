@@ -29,8 +29,7 @@
                         <!-- Items -->
                         <div class="divide-y divide-gray-100" id="cart-container">
                             @forelse($cartItems as $item)
-                                <div class="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center cart-item"
-                                    data-price="{{ $item->product->price }}" data-id="{{ $item->id }}">
+                                <div class="p-4 grid grid-cols-1 md:grid-cols-12 gap-4 items-center cart-item">
 
                                     <!-- Info Produk -->
                                     <div class="col-span-6 flex items-center gap-4">
@@ -45,7 +44,7 @@
                                         <div
                                             class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                                             @if($item->product->images->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $item->product->images->first()->path_foto) }}"
+                                                <img src="{{ asset('storage/' . $item->product->images->first()->path) }}"
                                                     class="w-full h-full object-cover">
                                             @else
                                                 <i class="fa-solid fa-seedling text-leafly-green text-xl"></i>
@@ -65,12 +64,38 @@
 
                                     <!-- Qty -->
                                     <div class="col-span-2 flex justify-center">
-                                        <input type="number" class="w-16 border rounded text-center"
-                                            value="{{ $item->quantity }}" readonly>
+                                        <div class="flex items-center border rounded overflow-hidden">
+
+                                            <!-- minus -->
+                                            <form action="{{ route('cart.update', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="quantity" value="{{ $item->quantity - 1 }}">
+                                                <button {{ $item->quantity <= 1 ? 'disabled' : '' }}
+                                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:opacity-40">
+                                                    −
+                                                </button>
+                                            </form>
+
+                                            <!-- qty -->
+                                            <input type="text" class="w-10 text-center border-0 focus:ring-0"
+                                                value="{{ $item->quantity }}" readonly>
+
+                                            <!-- plus -->
+                                            <form action="{{ route('cart.update', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="quantity" value="{{ $item->quantity + 1 }}">
+                                                <button class="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700">
+                                                    +
+                                                </button>
+                                            </form>
+
+                                        </div>
                                     </div>
 
                                     <!-- Subtotal -->
-                                    <div class="col-span-2 text-center font-bold text-leafly-dark subtotal-text">
+                                    <div class="col-span-2 text-center font-bold text-leafly-dark">
                                         Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
                                     </div>
                                 </div>
@@ -92,7 +117,7 @@
                         <div class="space-y-3 text-sm text-gray-600 mb-6">
                             <div class="flex justify-between">
                                 <span>Subtotal</span>
-                                <span id="subtotal-display">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                                <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span>Biaya Layanan</span>
@@ -102,7 +127,7 @@
 
                         <div class="flex justify-between font-bold text-lg mb-6">
                             <span>Total</span>
-                            <span id="final-total-display">
+                            <span>
                                 Rp {{ number_format($subtotal + $adminFee, 0, ',', '.') }}
                             </span>
                         </div>

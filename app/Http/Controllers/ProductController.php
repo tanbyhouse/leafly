@@ -26,7 +26,11 @@ class ProductController extends Controller
         }
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            $categories = array_map('ucfirst', $request->category);
+
+            $query->whereHas('category', function ($q) use ($categories) {
+                $q->whereIn('name', $categories);
+            });
         }
 
         if ($request->filled('min_price')) {
@@ -96,7 +100,7 @@ class ProductController extends Controller
                 'id'    => $p->id,
                 'name'  => $p->name,
                 'price' => $p->price,
-                'image' => $p->images->first()->path_foto ?? null,
+                'image' => $p->images->first()->path ?? null,
                 'category' => $p->category->name ?? '',
             ]);
     }

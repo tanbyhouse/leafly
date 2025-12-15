@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <title>@yield('title', 'Leafly - Hidroponik')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,7 @@
                         leafly: {
                             dark: '#225D2D',
                             green: '#BADD7F',
-                            gold: '#FABF39', 
+                            gold: '#FABF39',
                             cream: '#F7EFDA',
                         }
                     },
@@ -32,7 +32,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         body { font-family: 'Onest', sans-serif; }
         @keyframes fade-in-up {
@@ -59,5 +59,6 @@
 
     <!-- script -->
     @stack('scripts')
+    
 </body>
 </html>

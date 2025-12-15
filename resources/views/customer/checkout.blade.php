@@ -107,6 +107,20 @@
                                 </div>
 
                                 <div class="col-span-1 md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                        Label Alamat *
+                                    </label>
+                                    <select name="label"
+                                        class="w-full border-gray-300 rounded-lg focus:ring-leafly-green focus:border-leafly-green"
+                                        required>
+                                        <option value="">Pilih Label</option>
+                                        <option value="Rumah">Rumah</option>
+                                        <option value="Kantor">Kantor</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-span-1 md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Catatan (Optional)</label>
                                     <textarea name="notes" rows="2"
                                         class="w-full border-gray-300 rounded-lg focus:ring-leafly-green focus:border-leafly-green"
@@ -166,8 +180,8 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <label
                                     class="relative flex flex-col p-4 bg-white border-2 rounded-xl cursor-pointer shadow-sm hover:shadow-md transition payment-option border-leafly-green bg-green-50">
-                                    <input type="radio" name="payment_method" value="transfer" class="absolute opacity-0"
-                                        checked>
+                                    {{-- ✅ FIX: hapus checked agar JS yang mengontrol --}}
+                                    <input type="radio" name="payment_method" value="transfer" class="absolute opacity-0">
                                     <div class="flex items-center justify-between mb-2">
                                         <i class="fa-solid fa-building-columns text-2xl text-blue-600"></i>
                                         <i class="fa-solid fa-circle-check text-leafly-dark text-xl check-icon"></i>
@@ -202,7 +216,7 @@
                                         <div
                                             class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center shrink-0 overflow-hidden">
                                             @if($item->product->images->isNotEmpty())
-                                                <img src="{{ asset('storage/' . $item->product->images->first()->path_foto) }}"
+                                                <img src="{{ asset('storage/' . $item->product->images->first()->path) }}"
                                                     alt="{{ $item->product->name }}" class="w-full h-full object-cover">
                                             @else
                                                 <i class="fa-solid fa-seedling text-leafly-green"></i>
@@ -268,60 +282,54 @@
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        // $(document).ready(function () {
-        //     console.log('JS CHECKOUT JALAN');
-        // });
         let subtotal = {{ $subtotal }};
         let adminFee = {{ $adminFee }};
         let courier = 'jne';
+        let service = 'REG';
         let shippingCost = 0;
 
+        /* =========================
+           TOTAL
+        ========================= */
         function updateGrandTotal() {
             let total = subtotal + adminFee + shippingCost;
             $('#grand-total-display').text('Rp ' + total.toLocaleString('id-ID'));
             $('#shipping-cost-display').text('Rp ' + shippingCost.toLocaleString('id-ID'));
             $('#shipping_cost_input').val(shippingCost);
+            $('#courier_input').val(courier);
+            $('#service_input').val(service);
         }
 
-        // =========================
-        // PROVINCE (DB)
-        // =========================
+        /* =========================
+           PROVINCE
+        ========================= */
         function fetchProvinces() {
             $.get("{{ route('ajax.provinces') }}", function (res) {
                 $('#province_select').html('<option value="">Pilih Provinsi</option>');
                 res.forEach(p => {
-                    $('#province_select').append(
-                        `<option value="${p.id}">${p.name}</option>`
-                    );
+                    $('#province_select').append(`<option value="${p.id}">${p.name}</option>`);
                 });
-            }).fail(() => {
-                alert('Gagal load provinsi');
             });
         }
 
+        /* =========================
+           CITY
+        ========================= */
         function fetchCities(provinceId) {
             $('#city_select').html('<option value="">Loading...</option>');
-
             $.get(`/ajax/cities/${provinceId}`, function (res) {
                 $('#city_select').html('<option value="">Pilih Kota</option>');
-
                 res.forEach(c => {
-                    $('#city_select').append(
-                        `<option value="${c.id}">${c.name}</option>`
-                    );
+                    $('#city_select').append(`<option value="${c.id}">${c.name}</option>`);
                 });
-            }).fail(() => {
-                alert('Gagal load kota');
             });
         }
 
-
-
-
-        // =========================
-        // ONGKIR (RAJAONGKIR)
-        // =========================
+        /* =========================
+           ONGKIR
+        ========================= */
         function fetchOngkir() {
             let cityId = $('#city_select').val();
             if (!cityId) return;
@@ -332,34 +340,96 @@
                 courier: courier
             }, function (res) {
                 if (!res.success) {
-                    Swal.fire('Error', res.message, 'error');
+                    Swal.fire('Error', res.message ?? 'Gagal hitung ongkir', 'error');
                     return;
                 }
 
                 shippingCost = parseInt(res.data.cost);
-                $('#shipping-service-display').text(res.data.service);
+
+                // ✅ FIX: ringkasan service harus ikut pilihan (REG / YES)
+                $('#shipping-service-display').text(courier.toUpperCase() + ' ' + service);
+
                 $('#shipping-etd-display').text(res.data.etd + ' hari');
 
                 updateGrandTotal();
+
+                // (optional) tampilkan biaya di label kanan opsi pengiriman
+                if (service === 'REG') $('#label_reg').text('Rp ' + shippingCost.toLocaleString('id-ID'));
+                if (service === 'YES') $('#label_yes').text('Rp ' + shippingCost.toLocaleString('id-ID'));
             }).fail(() => {
                 Swal.fire('Error', 'Gagal hitung ongkir', 'error');
             });
         }
 
-        // =========================
-        // INIT
-        // =========================
+        /* =========================
+           SHIPPING OPTION
+        ========================= */
+        function setCourier(c, s) {
+            courier = c;
+            service = s;
+
+            // ✅ FIX: sync radio yang dipilih (biar tidak selalu yg pertama)
+            $('input[name="courier_radio"]').prop('checked', false);
+            if (s === 'REG') $('input[name="courier_radio"]').eq(0).prop('checked', true);
+            if (s === 'YES') $('input[name="courier_radio"]').eq(1).prop('checked', true);
+
+            // ✅ FIX: update hidden input courier/service
+            $('#courier_input').val(courier);
+            $('#service_input').val(service);
+
+            // ✅ FIX: ringkasan service langsung berubah walau ongkir belum balik
+            $('#shipping-service-display').text(courier.toUpperCase() + ' ' + service);
+
+            // hitung ulang kalau kota sudah dipilih
+            fetchOngkir();
+        }
+
+        /* =========================
+           PAYMENT METHOD
+        ========================= */
+        function setPayment(method) {
+            // ✅ FIX: pastikan radio yang benar tercentang
+            $('input[name="payment_method"]').prop('checked', false);
+            $(`input[name="payment_method"][value="${method}"]`).prop('checked', true);
+
+            // ✅ FIX: highlight card + ikon cek
+            $('.payment-option')
+                .removeClass('border-leafly-green bg-green-50')
+                .addClass('border-gray-100');
+
+            $('.payment-option .check-icon').addClass('hidden');
+
+            const $card = $(`input[name="payment_method"][value="${method}"]`).closest('.payment-option');
+            $card.removeClass('border-gray-100').addClass('border-leafly-green bg-green-50');
+            $card.find('.check-icon').removeClass('hidden');
+        }
+
+        /* =========================
+           INIT
+        ========================= */
         $(document).ready(function () {
+
             fetchProvinces();
 
+            // ✅ FIX: set default payment transfer via JS (karena checked sudah dihapus)
+            setPayment('transfer');
+
+            // ✅ FIX: set default courier/service ke ringkasan
+            $('#shipping-service-display').text(courier.toUpperCase() + ' ' + service);
+            updateGrandTotal();
+
             $('#province_select').on('change', function () {
-                let provId = $(this).val();
-                $('#province_id_input').val(provId);
+                let id = $(this).val();
+                $('#province_id_input').val(id);
                 $('#city_id_input').val('');
                 shippingCost = 0;
-                updateGrandTotal();
 
-                if (provId) fetchCities(provId);
+                // reset ringkasan ongkir
+                $('#shipping-cost-display').text('Rp 0');
+                $('#shipping-etd-display').text('-');
+
+                updateGrandTotal();
+                if (id) fetchCities(id);
             });
 
             $('#city_select').on('change', function () {
@@ -369,14 +439,20 @@
                 fetchOngkir();
             });
 
-            $('#btn-pay').click(function () {
-                if (!$('#province_select').val() || !$('#city_select').val()) {
+            $('.payment-option').on('click', function () {
+                let method = $(this).find('input[name="payment_method"]').val();
+                setPayment(method);
+            });
+
+            $('#btn-pay').on('click', function () {
+
+                if (!$('#province_id_input').val() || !$('#city_id_input').val()) {
                     Swal.fire('Alamat belum lengkap', 'Pilih provinsi dan kota', 'warning');
                     return;
                 }
 
                 if (shippingCost <= 0) {
-                    Swal.fire('Ongkir belum dihitung', 'Pilih kota dulu', 'warning');
+                    Swal.fire('Ongkir belum dihitung', 'Pilih kota terlebih dahulu', 'warning');
                     return;
                 }
 
@@ -384,7 +460,7 @@
                     title: 'Konfirmasi Pesanan?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Bayar'
+                    confirmButtonText: 'Bayar Sekarang'
                 }).then(res => {
                     if (res.isConfirmed) {
                         $('#checkout-form').submit();

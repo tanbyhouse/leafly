@@ -21,9 +21,8 @@
 
             <a href="{{ route('cart.index') }}" class="text-white hover:text-leafly-green transition mr-4 relative">
                 <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span
-                    class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    2
+                <span id="cart-count"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">
                 </span>
             </a>
 
@@ -49,10 +48,10 @@
 
                     <!-- dropdown (FIXED) -->
                     <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2
-                                       border border-gray-100 z-50
-                                       opacity-0 invisible
-                                       group-hover:opacity-100 group-hover:visible
-                                       transition-all duration-200">
+                                               border border-gray-100 z-50
+                                               opacity-0 invisible
+                                               group-hover:opacity-100 group-hover:visible
+                                               transition-all duration-200">
 
                         <a href="{{ route('profile.index') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-leafly-dark">
@@ -85,3 +84,19 @@
         </button>
     </div>
 </nav>
+
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $.get("{{ route('cart.count') }}", function (res) {
+                if (res.count > 0) {
+                    $('#cart-count')
+                        .text(res.count)
+                        .removeClass('hidden');
+                } else {
+                    $('#cart-count').addClass('hidden');
+                }
+            });
+        });
+    </script>
+@endpush

@@ -84,7 +84,10 @@
                             <label for="remember-me" class="ml-2 block text-sm text-gray-900">Ingat saya</label>
                         </div>
                         <div class="text-sm">
-                            <a href="#" class="font-medium text-leafly-dark hover:text-leafly-gold">Lupa kata sandi?</a>
+                            <a href="{{ route('password.request') }}"
+                                class="font-medium text-leafly-dark hover:text-leafly-gold">
+                                Lupa kata sandi?
+                            </a>
                         </div>
                     </div>
 

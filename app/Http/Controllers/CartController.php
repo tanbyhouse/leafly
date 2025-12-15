@@ -110,4 +110,19 @@ class CartController extends Controller
             ->route('cart.index')
             ->with('success', 'Produk berhasil dihapus dari keranjang');
     }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        Cart::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->update([
+                'quantity' => $request->quantity
+            ]);
+
+        return redirect()->route('cart.index');
+    }
 }
