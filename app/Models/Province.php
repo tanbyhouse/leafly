@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Province extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['name','rajaongkir_id'];
+    protected $fillable = ['name'];
 
     public function cities()
     {

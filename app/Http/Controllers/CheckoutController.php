@@ -2,294 +2,175 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pesanan;
-use App\Models\DetailPesanan;
-use App\Models\Keranjang;
-use App\Models\AlamatPelanggan;
-use App\Models\Pembayaran;
-use App\Models\Pengiriman;
-use App\Models\Provinsi;
-use App\Models\Kota;
-use App\Models\Kecamatan;
-use App\Services\OngkirService;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Address;
+use App\Models\Payment;
+use App\Models\Shipment;
+use App\Models\Province;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
-    protected $ongkirService;
-
-    public function __construct(OngkirService $ongkirService)
-    {
-        $this->ongkirService = $ongkirService;
-    }
-
     public function index()
     {
-        $pelanggan = Auth::user()->pelanggan;
+        $user = Auth::user();
 
-        $cartItems = Keranjang::with(['product.images', 'product.category'])
-            ->where('pelanggan_id', $pelanggan->id)
+        $cartItems = Cart::with('product.images')
+            ->where('user_id', $user->id)
             ->get();
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')
-                ->with('error', 'Keranjang Anda kosong');
+                ->with('error', 'Keranjang masih kosong');
         }
 
-        foreach ($cartItems as $item) {
-            if ($item->product->stok < $item->jumlah) {
-                return redirect()->route('cart.index')
-                    ->with('error', 'Stok ' . $item->product->nama_product . ' tidak mencukupi');
-            }
-        }
-
-        $addresses = AlamatPelanggan::with(['provinsi', 'kota', 'kecamatan'])
-            ->where('pelanggan_id', $pelanggan->id)
-            ->get();
-
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->product->harga * $item->jumlah;
-        });
-
+        $subtotal = $cartItems->sum(fn($i) => $i->product->price * $i->quantity);
         $adminFee = 1000;
-
-        $provinces = Provinsi::all();
 
         return view('customer.checkout', compact(
             'cartItems',
-            'addresses',
             'subtotal',
-            'adminFee',
-            'provinces'
+            'adminFee'
         ));
     }
 
-    public function process(Request $request)
+    /* ===============================
+     | LOCATION (DATABASE)
+     =============================== */
+
+    public function provinces()
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'postal_code' => 'nullable|string|max:10',
-            'courier' => 'required|in:reguler,express',
-            'payment_method' => 'required|in:transfer,cod',
-        ]);
-
-        $pelanggan = Auth::user()->pelanggan;
-
-        $cartItems = Keranjang::with('product')
-            ->where('pelanggan_id', $pelanggan->id)
-            ->get();
-
-        if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Keranjang Anda kosong');
-        }
-
-        DB::beginTransaction();
-        try {
-            $alamat = $this->createOrGetAddress($request, $pelanggan->id);
-
-            $subtotal = $cartItems->sum(function ($item) {
-                return $item->product->harga * $item->jumlah;
-            });
-
-            $ongkosKirim = $request->courier === 'express' ? 20000 : 10000;
-            $pajak = $subtotal * 0.11;
-            $adminFee = 1000;
-            $total = $subtotal + $ongkosKirim + $pajak + $adminFee;
-
-            $nomorPesanan = 'ORD-' . date('Ymd') . '-' . str_pad(
-                Pesanan::whereDate('created_at', today())->count() + 1,
-                4,
-                '0',
-                STR_PAD_LEFT
-            );
-
-            $pesanan = Pesanan::create([
-                'nomor_pesanan' => $nomorPesanan,
-                'pelanggan_id' => $pelanggan->id,
-                'alamat_id' => $alamat->id,
-                'subtotal' => $subtotal,
-                'ongkos_kirim' => $ongkosKirim,
-                'pajak' => $pajak,
-                'diskon' => 0,
-                'total' => $total,
-                'metode_pembayaran' => $request->payment_method === 'cod' ? 'cod' : 'transfer',
-                'status_pembayaran' => 'pending',
-                'status_pesanan' => 'pending',
-                'catatan_pelanggan' => $request->notes ?? null,
-            ]);
-
-            foreach ($cartItems as $item) {
-                if ($item->product->stok < $item->jumlah) {
-                    throw new \Exception('Stok ' . $item->product->nama_product . ' tidak mencukupi');
-                }
-
-                DetailPesanan::create([
-                    'pesanan_id' => $pesanan->id,
-                    'product_id' => $item->product_id,
-                    'nama_product' => $item->product->nama_product,
-                    'kode_product' => $item->product->kode_product,
-                    'harga' => $item->product->harga,
-                    'jumlah' => $item->jumlah,
-                    'subtotal' => $item->product->harga * $item->jumlah,
-                ]);
-
-                $item->product->decrement('stok', $item->jumlah);
-            }
-
-            $pembayaran = Pembayaran::create([
-                'pesanan_id' => $pesanan->id,
-                'jumlah' => $total,
-                'status' => 'pending',
-                'metode_pembayaran' => $request->payment_method,
-            ]);
-
-            // if ($request->payment_method === 'transfer' && config('services.midtrans.server_key')) {
-            //     $this->createMidtransTransaction($pesanan, $pembayaran);
-            // }
-
-            $estimasiHari = $request->courier === 'express' ? 1 : 3;
-            Pengiriman::create([
-                'pesanan_id' => $pesanan->id,
-                'kode_kurir' => $request->courier === 'express' ? 'express' : 'reguler',
-                'nama_kurir' => $request->courier === 'express' ? 'Express (Next Day)' : 'Reguler (JNE/J&T)',
-                'tipe_layanan' => $request->courier,
-                'biaya_ongkir' => $ongkosKirim,
-                'estimasi_hari' => $estimasiHari,
-                'estimasi_tiba' => now()->addDays($estimasiHari),
-                'status' => 'pending',
-            ]);
-
-            Keranjang::where('pelanggan_id', $pelanggan->id)->delete();
-
-            DB::commit();
-
-            return redirect()->route('order.success', $pesanan->id)
-                ->with('success', 'Pesanan berhasil dibuat!');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Checkout error: ' . $e->getMessage());
-
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
-                ->withInput();
-        }
-    }
-
-    private function createOrGetAddress(Request $request, $pelangganId)
-    {
-        $provinsi = Provinsi::firstOrCreate(
-            ['nama_provinsi' => 'Jawa Timur'],
-            ['kode_provinsi' => 'JT']
+        return response()->json(
+            Province::orderBy('name')->get(['id', 'name'])
         );
-
-        $kota = Kota::firstOrCreate(
-            ['nama_kota' => $request->city, 'provinsi_id' => $provinsi->id],
-            ['kode_kota' => 'KT' . time(), 'tipe' => 'Kota']
-        );
-
-        $kecamatan = Kecamatan::firstOrCreate(
-            ['nama_kecamatan' => 'Default', 'kota_id' => $kota->id],
-            ['kode_kecamatan' => 'KC' . time()]
-        );
-
-        return AlamatPelanggan::create([
-            'pelanggan_id' => $pelangganId,
-            'label' => 'Alamat Checkout',
-            'nama_penerima' => $request->name,
-            'telepon' => $request->phone,
-            'alamat_lengkap' => $request->address,
-            'kecamatan_id' => $kecamatan->id,
-            'kota_id' => $kota->id,
-            'provinsi_id' => $provinsi->id,
-            'kode_pos' => $request->postal_code ?? '00000',
-            'alamat_utama' => false,
-        ]);
-    }
-
-    // private function createMidtransTransaction($pesanan, $pembayaran)
-    // {
-    //     try {
-    //         Config::$serverKey = config('services.midtrans.server_key');
-    //         Config::$isProduction = config('services.midtrans.is_production', false);
-    //         Config::$isSanitized = true;
-    //         Config::$is3ds = true;
-
-    //         $params = [
-    //             'transaction_details' => [
-    //                 'order_id' => $pesanan->nomor_pesanan,
-    //                 'gross_amount' => (int) $pesanan->total,
-    //             ],
-    //             'customer_details' => [
-    //                 'first_name' => $pesanan->pelanggan->nama,
-    //                 'email' => $pesanan->pelanggan->user->email,
-    //                 'phone' => $pesanan->alamat->telepon,
-    //             ],
-    //         ];
-
-    //         $snapToken = Snap::getSnapToken($params);
-
-    //         $pembayaran->update([
-    //             'snap_token' => $snapToken,
-    //             'nama_payment_gateway' => 'midtrans',
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         Log::error('Midtrans Error: ' . $e->getMessage());
-    //     }
-    // }
-
-    public function success($id)
-    {
-        $pelanggan = Auth::user()->pelanggan;
-
-        $pesanan = Pesanan::with([
-            'detailPesanans.product.images',
-            'alamat.provinsi',
-            'alamat.kota',
-            'alamat.kecamatan',
-            'pembayaran',
-            'pengiriman'
-        ])
-            ->where('pelanggan_id', $pelanggan->id)
-            ->findOrFail($id);
-
-        return view('customer.order-success', compact('pesanan'));
     }
 
     public function getCities($provinceId)
     {
-        $cities = Kota::where('provinsi_id', $provinceId)->get();
-        return response()->json($cities);
+        return response()->json(
+            City::where('province_id', $provinceId)
+                ->orderBy('name')
+                ->get(['id', 'name'])
+        );
     }
 
-    public function getDistricts($cityId)
-    {
-        $districts = Kecamatan::where('kota_id', $cityId)->get();
-        return response()->json($districts);
-    }
-
-    public function calculateShipping(Request $request)
+    /* ===============================
+     | ONGKIR (LOCAL LOGIC)
+     =============================== */
+    public function ajaxOngkir(Request $request)
     {
         $request->validate([
-            'kota_tujuan' => 'required|string',
-            'berat' => 'required|numeric',
-            'kurir' => 'required|in:reguler,express',
+            'city_id' => 'required|integer',
+            'courier' => 'required|string',
         ]);
 
-        $result = $this->ongkirService->hitungOngkir(
-            $request->kota_tujuan,
-            $request->berat,
-            $request->kurir
-        );
+        // 👉 LOGIC ONGKIR SEDERHANA (BISA KAMU UBAH)
+        $shippingCost = match ($request->courier) {
+            'jne' => 10000,
+            'pos' => 9000,
+            'tiki' => 11000,
+            default => 10000
+        };
 
         return response()->json([
             'success' => true,
-            'data' => $result
+            'data' => [
+                'cost' => $shippingCost,
+                'service' => strtoupper($request->courier),
+                'etd' => '2-3'
+            ]
         ]);
+    }
+
+    /* ===============================
+     | PROCESS CHECKOUT
+     =============================== */
+    public function process(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'province_id' => 'required|exists:provinces,id',
+            'city_id' => 'required|exists:cities,id',
+            'district' => 'required',
+            'shipping_cost' => 'required|integer|min:0',
+            'payment_method' => 'required|in:cod,transfer',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $user = Auth::user();
+
+            $cartItems = Cart::with('product')
+                ->where('user_id', $user->id)
+                ->get();
+
+            $subtotal = $cartItems->sum(fn($i) => $i->product->price * $i->quantity);
+            $adminFee = 1000;
+            $total = $subtotal + $adminFee + $request->shipping_cost;
+
+            $address = Address::create([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'province_id' => $request->province_id,
+                'city_id' => $request->city_id,
+                'district' => $request->district,
+                'postal_code' => $request->postal_code,
+                'notes' => $request->notes,
+            ]);
+
+            $order = Order::create([
+                'order_number' => 'ORD-' . now()->format('YmdHis'),
+                'user_id' => $user->id,
+                'address_id' => $address->id,
+                'subtotal' => $subtotal,
+                'shipping_cost' => $request->shipping_cost,
+                'admin_fee' => $adminFee,
+                'total' => $total,
+                'payment_method' => $request->payment_method,
+                'status' => 'pending',
+            ]);
+
+            foreach ($cartItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'price' => $item->product->price,
+                    'quantity' => $item->quantity,
+                    'subtotal' => $item->product->price * $item->quantity,
+                ]);
+            }
+
+            Shipment::create([
+                'order_id' => $order->id,
+                'courier' => 'local',
+                'shipping_cost' => $request->shipping_cost,
+                'status' => 'pending',
+            ]);
+
+            Payment::create([
+                'order_id' => $order->id,
+                'amount' => $total,
+                'method' => $request->payment_method,
+                'status' => 'pending',
+            ]);
+
+            Cart::where('user_id', $user->id)->delete();
+        });
+
+        return redirect()->route('orders.success', 1);
+    }
+
+    public function success($id)
+    {
+        return view('customer.order-success');
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price', 12, 2);
             $table->integer('quantity');
             $table->decimal('subtotal', 12, 2);
+            $table->timestamps();
         });
     }
 

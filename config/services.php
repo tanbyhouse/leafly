@@ -32,20 +32,20 @@ return [
     ],
 
     'rajaongkir' => [
-        'api_key' => env('RAJAONGKIR_API_KEY'),
-        'base_url' => env('RAJAONGKIR_BASE_URL', 'https://api.rajaongkir.com/starter'),
-        'origin_city_id' => env('ORIGIN_CITY_ID', 419), // Default: Surabaya
+        'key' => env('RAJAONGKIR_API_KEY'),
+        'base_url' => env('RAJAONGKIR_BASE_URL'),
+        // 'origin_city_id' => env('ORIGIN_CITY_ID', 419), // Default: Surabaya
     ],
 
-    'binderbyte' => [
-        'api_key' => env('BINDERBYTE_API_KEY'),
-        'base_url' => env('BINDERBYTE_BASE_URL', 'https://api.binderbyte.com'),
-    ],
+    // 'binderbyte' => [
+    //     'api_key' => env('BINDERBYTE_API_KEY'),
+    //     'base_url' => env('BINDERBYTE_BASE_URL', 'https://api.binderbyte.com'),
+    // ],
 
-    'midtrans' => [
-        'server_key' => env('MIDTRANS_SERVER_KEY'),
-        'client_key' => env('MIDTRANS_CLIENT_KEY'),
-        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
-        'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
-    ],
+    // 'midtrans' => [
+    //     'server_key' => env('MIDTRANS_SERVER_KEY'),
+    //     'client_key' => env('MIDTRANS_CLIENT_KEY'),
+    //     'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    //     'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
+    // ],
 ];

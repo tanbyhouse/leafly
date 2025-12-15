@@ -2,37 +2,69 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Http;
+
 class OngkirService
 {
-    /**
-     * Hitung ongkir manual (GRATIS - tanpa API)
-     */
-    public function hitungOngkir($kotaTujuan, $berat, $kurir = 'reguler')
+    protected string $key;
+    protected string $base;
+
+    public function __construct()
     {
-        // Tarif base per kg (dalam rupiah)
-        $tarifPerKg = [
-            'reguler' => 8000,  // 8000/kg
-            'express' => 15000, // 15000/kg
-        ];
+        $this->key  = config('services.rajaongkir.key');
+        $this->base = rtrim(config('services.rajaongkir.base_url'), '/');
+    }
 
-        // Konversi gram ke kg
-        $beratKg = ceil($berat / 1000);
+    private function client()
+    {
+        return Http::withHeaders([
+            'Authorization' => 'Bearer ' . $this->key,
+            'Accept' => 'application/json',
+        ]);
+    }
 
-        // Hitung ongkir
-        $ongkir = $beratKg * $tarifPerKg[$kurir];
+    public function getProvinces(): array
+    {
+        $res = $this->client()->get(
+            $this->base . '/api/rajaongkir/domestic-destination/province'
+        )->json();
 
-        // Minimal ongkir 10.000
-        $ongkir = max($ongkir, 10000);
+        return $res['data'] ?? [];
+    }
 
-        // Estimasi hari
-        $estimasi = $kurir === 'express' ? 1 : 3;
+    public function getCities(int $provinceId): array
+    {
+        $res = $this->client()->get(
+            $this->base . '/api/rajaongkir/domestic-destination/city',
+            ['province_id' => $provinceId]
+        )->json();
+
+        return $res['data'] ?? [];
+    }
+
+    public function calculate(int $origin, int $destination, int $weight, string $courier): array
+    {
+        $res = $this->client()->post(
+            $this->base . '/api/rajaongkir/domestic-cost',
+            [
+                'origin' => $origin,
+                'destination' => $destination,
+                'weight' => $weight,
+                'courier' => $courier,
+            ]
+        )->json();
+
+        if (!isset($res['data'][0]['costs'][0]['cost'][0])) {
+            throw new \Exception('Ongkir tidak ditemukan');
+        }
+
+        $service = $res['data'][0]['costs'][0];
+        $cost = $service['cost'][0];
 
         return [
-            'kurir' => $kurir === 'express' ? 'Express (Next Day)' : 'Reguler (JNE/J&T)',
-            'layanan' => $kurir,
-            'biaya' => $ongkir,
-            'estimasi_hari' => $estimasi,
-            'estimasi_tiba' => now()->addDays($estimasi)->format('d M Y'),
+            'service' => $service['service'],
+            'cost' => $cost['value'],
+            'etd' => $cost['etd'] ?? '',
         ];
     }
 }

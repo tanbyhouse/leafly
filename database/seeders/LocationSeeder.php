@@ -13,7 +13,6 @@ class LocationSeeder extends Seeder
     {
         $province = Province::create([
             'name' => 'Jawa Timur',
-            'rajaongkir_id' => '35',
         ]);
 
         $city = City::create([

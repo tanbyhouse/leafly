@@ -10,9 +10,10 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::insert([
-            ['name' => 'Benih Sayuran', 'description' => 'Benih berkualitas'],
-            ['name' => 'Bibit Buah', 'description' => 'Bibit unggul'],
-            ['name' => 'Alat Berkebun', 'description' => 'Peralatan kebun'],
+            ['name' => 'Benih', 'description' => 'Benih berkualitas'],
+            ['name' => 'Bibit', 'description' => 'Bibit unggul'],
+            ['name' => 'Alat', 'description' => 'Peralatan kebun'],
+            ['name' => 'Pupuk', 'description' => 'Pupuk perkebunan'],
         ]);
     }
 }

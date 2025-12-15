@@ -86,9 +86,9 @@
                             </div>
                         </div>
 
-                        <!-- filter harga -->
+                        <!-- filter price -->
                         <div class="mb-6">
-                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">Harga (Rp)</h4>
+                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">price (Rp)</h4>
                             <div class="flex flex-col gap-2">
                                 <div class="relative">
                                     <span class="absolute left-3 top-2 text-gray-400 text-xs">Rp</span>
@@ -160,19 +160,19 @@
                             <a href="{{ route('products.show', $product->id) }}" class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer">
                                 @if($product->images->isNotEmpty())
                                     <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
-                                         alt="{{ $product->nama_product }}"
+                                         alt="{{ $product->name }}"
                                          class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                                 @else
                                     <i class="fa-solid fa-seedling text-6xl text-leafly-green/50 group-hover:scale-110 transition duration-500"></i>
                                 @endif
 
-                                @if($product->stok <= 0)
+                                @if($product->stock <= 0)
                                     <span class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
                                         Habis
                                     </span>
-                                @elseif($product->stok < 10)
+                                @elseif($product->stock < 10)
                                     <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
-                                        Stok Terbatas
+                                        stock Terbatas
                                     </span>
                                 @endif
                             </a>
@@ -181,15 +181,15 @@
                                 <div class="text-xs text-gray-500 mb-1">{{ $product->category->nama_category }}</div>
 
                                 <a href="{{ route('products.show', $product->id) }}" class="hover:text-leafly-green transition">
-                                    <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight line-clamp-2">{{ $product->nama_product }}</h3>
+                                    <h3 class="font-bold text-leafly-dark text-lg mb-1 leading-tight line-clamp-2">{{ $product->name }}</h3>
                                 </a>
 
                                 <p class="text-sm text-gray-500 line-clamp-2 mb-2">{{ Str::limit($product->deskripsi, 60) }}</p>
 
                                 <div class="mt-auto flex flex-col gap-2">
                                     <div class="flex justify-between items-center">
-                                        <span class="text-xl font-bold text-leafly-dark">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
-                                        <span class="text-xs text-gray-500">Stok: {{ $product->stok }}</span>
+                                        <span class="text-xl font-bold text-leafly-dark">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
+                                        <span class="text-xs text-gray-500">stock: {{ $product->stock }}</span>
                                     </div>
 
                                     <a href="{{ route('products.show', $product->id) }}"
@@ -280,9 +280,9 @@
                             </div>
                         </div>
 
-                        <!-- filter harga -->
+                        <!-- filter price -->
                         <div class="mb-6">
-                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">Harga (Rp)</h4>
+                            <h4 class="font-bold text-leafly-dark text-sm mb-3 uppercase tracking-wider">price (Rp)</h4>
                             <div class="flex flex-col gap-2">
                                 <div class="relative">
                                     <span class="absolute left-3 top-2 text-gray-400 text-xs">Rp</span>

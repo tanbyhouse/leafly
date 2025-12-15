@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->nama_product . ' - Leafly')
+@section('title', $product->name . ' - Leafly')
 
 @section('content')
     <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -12,7 +12,7 @@
                 <span class="mx-2">/</span>
                 <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Product</a>
                 <span class="mx-2">/</span>
-                <span class="text-leafly-dark font-bold truncate">{{ $product->nama_product }}</span>
+                <span class="text-leafly-dark font-bold truncate">{{ $product->name }}</span>
             </nav>
 
             {{-- Success/Error Messages --}}
@@ -37,7 +37,7 @@
                             class="bg-gray-100 rounded-lg aspect-square flex items-center justify-center mb-4 overflow-hidden">
                             @if($product->images->isNotEmpty())
                                 <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
-                                    alt="{{ $product->nama_product }}" class="w-full h-full object-cover">
+                                    alt="{{ $product->name }}" class="w-full h-full object-cover">
                             @else
                                 <i class="fa-solid fa-seedling text-9xl text-leafly-green"></i>
                             @endif
@@ -48,7 +48,7 @@
                                 @foreach($product->images as $foto)
                                     <div
                                         class="bg-gray-100 rounded aspect-square overflow-hidden cursor-pointer hover:ring-2 ring-leafly-gold">
-                                        <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_product }}"
+                                        <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->name }}"
                                             class="w-full h-full object-cover">
                                     </div>
                                 @endforeach
@@ -63,7 +63,7 @@
                         </span>
 
                         <h1 class="text-3xl font-bold text-leafly-dark mt-4 mb-2">
-                            {{ $product->nama_product }}
+                            {{ $product->name }}
                         </h1>
 
                         <div class="flex items-center gap-4 mb-4">
@@ -77,7 +77,7 @@
                         </div>
 
                         <div class="text-4xl font-bold text-leafly-dark mb-6">
-                            Rp {{ number_format($product->harga, 0, ',', '.') }}
+                            Rp {{ number_format($product->price, 0, ',', '.') }}
                         </div>
 
                         <div class="border-t border-b border-gray-200 py-4 mb-6">
@@ -88,20 +88,20 @@
 
                         <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
                             <div>
-                                <span class="text-gray-500">Stok:</span>
-                                <span class="font-bold text-leafly-dark">{{ $product->stok }}</span>
+                                <span class="text-gray-500">stock:</span>
+                                <span class="font-bold text-leafly-dark">{{ $product->stock }}</span>
                             </div>
                             <div>
-                                <span class="text-gray-500">Berat:</span>
-                                <span class="font-bold">{{ $product->berat ?? '-' }} gram</span>
+                                <span class="text-gray-500">weight:</span>
+                                <span class="font-bold">{{ $product->weight ?? '-' }} gram</span>
                             </div>
                             <div>
                                 <span class="text-gray-500">Jenis:</span>
-                                <span class="font-bold">{{ ucfirst($product->jenis_product) }}</span>
+                                <span class="font-bold">{{ ucfirst($product->type) }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-500">Kode:</span>
-                                <span class="font-bold">{{ $product->kode_product }}</span>
+                                <span class="font-bold">{{ $product->sku }}</span>
                             </div>
                         </div>
 
@@ -115,7 +115,7 @@
                                     <div class="flex border rounded-lg overflow-hidden">
                                         <button type="button" onclick="changeQty(-1)"
                                             class="px-4 py-2 bg-gray-100 hover:bg-gray-200">-</button>
-                                        <input type="number" name="jumlah" id="qty" value="1" min="1" max="{{ $product->stok }}"
+                                        <input type="number" name="quantity" id="qty" value="1" min="1" max="{{ $product->stock }}"
                                             class="w-20 text-center border-none focus:ring-0" readonly>
                                         <button type="button" onclick="changeQty(1)"
                                             class="px-4 py-2 bg-gray-100 hover:bg-gray-200">+</button>
@@ -124,9 +124,9 @@
 
                                 <button type="submit"
                                     class="w-full bg-leafly-dark text-white font-bold py-3 rounded-lg hover:bg-leafly-gold hover:text-leafly-dark transition flex items-center justify-center gap-2"
-                                    {{ $product->stok <= 0 ? 'disabled' : '' }}>
+                                    {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                     <i class="fa-solid fa-cart-plus"></i>
-                                    {{ $product->stok > 0 ? 'Tambah ke Keranjang' : 'Stok Habis' }}
+                                    {{ $product->stock > 0 ? 'Tambah ke Keranjang' : 'stock Habis' }}
                                 </button>
                             </form>
                         @else
@@ -181,13 +181,13 @@
                                     class="bg-gray-100 rounded aspect-square mb-3 flex items-center justify-center overflow-hidden">
                                     @if($related->images->isNotEmpty())
                                         <img src="{{ asset('storage/' . $related->images->first()->path_foto) }}"
-                                            alt="{{ $related->nama_product }}" class="w-full h-full object-cover">
+                                            alt="{{ $related->name }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="fa-solid fa-seedling text-4xl text-leafly-green"></i>
                                     @endif
                                 </div>
-                                <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_product }}</h4>
-                                <p class="text-leafly-dark font-bold">Rp {{ number_format($related->harga, 0, ',', '.') }}</p>
+                                <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->name }}</h4>
+                                <p class="text-leafly-dark font-bold">Rp {{ number_format($related->price, 0, ',', '.') }}</p>
                             </a>
                         @endforeach
                     </div>
@@ -207,14 +207,45 @@
                     input.value = newVal;
                 }
             }
+
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+
+                $.post("{{ route('cart.add') }}", $(this).serialize(), function (res) {
+                    if (res.success) {
+                        $('#cart-count').text(res.count);
+                        alert('Produk ditambahkan ke keranjang');
+                    }
+                }).fail(function () {
+                    alert('Gagal menambahkan ke keranjang');
+                });
+            });
         </script>
     @endpush
+
+    @push('scripts')
+        <script>
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+
+            $.post("{{ route('cart.add') }}", $(this).serialize(), function (res) {
+                if (res.success) {
+                    $('#cart-count').text(res.count);
+                    alert('Produk ditambahkan ke keranjang');
+                }
+            }).fail(function () {
+                alert('Gagal menambahkan ke keranjang');
+            });
+        });
+        </script>
+@endpush
+
 @endsection
 
 
 {{-- @extends('layouts.app')
 
-@section('title', $product->nama_product . ' - Leafly')
+@section('title', $product->name . ' - Leafly')
 
 @section('content')
 <div class="bg-leafly-cream min-h-screen pt-24 pb-12">
@@ -225,7 +256,7 @@
             <span class="mx-2">/</span>
             <a href="{{ route('products.index') }}" class="hover:text-leafly-dark">Product</a>
             <span class="mx-2">/</span>
-            <span class="text-leafly-dark font-bold">{{ $product->nama_product }}</span>
+            <span class="text-leafly-dark font-bold">{{ $product->name }}</span>
         </nav>
 
         <div class="bg-white rounded-2xl shadow-md overflow-hidden">
@@ -237,7 +268,7 @@
                         class="bg-gray-100 rounded-lg aspect-square flex items-center justify-center mb-4 overflow-hidden">
                         @if($product->images->isNotEmpty())
                         <img src="{{ asset('storage/' . $product->images->first()->path_foto) }}"
-                            alt="{{ $product->nama_product }}" class="w-full h-full object-cover">
+                            alt="{{ $product->name }}" class="w-full h-full object-cover">
                         @else
                         <i class="fa-solid fa-seedling text-9xl text-leafly-green"></i>
                         @endif
@@ -248,7 +279,7 @@
                         @foreach($product->images as $foto)
                         <div
                             class="bg-gray-100 rounded aspect-square overflow-hidden cursor-pointer hover:ring-2 ring-leafly-gold">
-                            <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->nama_product }}"
+                            <img src="{{ asset('storage/' . $foto->path_foto) }}" alt="{{ $product->name }}"
                                 class="w-full h-full object-cover">
                         </div>
                         @endforeach
@@ -263,7 +294,7 @@
                     </span>
 
                     <h1 class="text-3xl font-bold text-leafly-dark mt-4 mb-2">
-                        {{ $product->nama_product }}
+                        {{ $product->name }}
                     </h1>
 
                     <div class="flex items-center gap-4 mb-4">
@@ -277,7 +308,7 @@
                     </div>
 
                     <div class="text-4xl font-bold text-leafly-dark mb-6">
-                        Rp {{ number_format($product->harga, 0, ',', '.') }}
+                        Rp {{ number_format($product->price, 0, ',', '.') }}
                     </div>
 
                     <div class="border-t border-b border-gray-200 py-4 mb-6">
@@ -288,20 +319,20 @@
 
                     <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
                         <div>
-                            <span class="text-gray-500">Stok:</span>
-                            <span class="font-bold text-leafly-dark">{{ $product->stok }}</span>
+                            <span class="text-gray-500">stock:</span>
+                            <span class="font-bold text-leafly-dark">{{ $product->stock }}</span>
                         </div>
                         <div>
-                            <span class="text-gray-500">Berat:</span>
-                            <span class="font-bold">{{ $product->berat ?? '-' }} gram</span>
+                            <span class="text-gray-500">weight:</span>
+                            <span class="font-bold">{{ $product->weight ?? '-' }} gram</span>
                         </div>
                         <div>
                             <span class="text-gray-500">Jenis:</span>
-                            <span class="font-bold">{{ ucfirst($product->jenis_product) }}</span>
+                            <span class="font-bold">{{ ucfirst($product->type) }}</span>
                         </div>
                         <div>
                             <span class="text-gray-500">Kode:</span>
-                            <span class="font-bold">{{ $product->kode_product }}</span>
+                            <span class="font-bold">{{ $product->sku }}</span>
                         </div>
                     </div>
 
@@ -314,7 +345,7 @@
                             <div class="flex border rounded-lg overflow-hidden">
                                 <button type="button" onclick="changeQty(-1)"
                                     class="px-4 py-2 bg-gray-100 hover:bg-gray-200">-</button>
-                                <input type="number" name="jumlah" id="qty" value="1" min="1" max="{{ $product->stok }}"
+                                <input type="number" name="jumlah" id="qty" value="1" min="1" max="{{ $product->stock }}"
                                     class="w-20 text-center border-none focus:ring-0" readonly>
                                 <button type="button" onclick="changeQty(1)"
                                     class="px-4 py-2 bg-gray-100 hover:bg-gray-200">+</button>
@@ -323,9 +354,9 @@
 
                         <button type="submit"
                             class="w-full bg-leafly-dark text-white font-bold py-3 rounded-lg hover:bg-leafly-gold hover:text-leafly-dark transition flex items-center justify-center gap-2"
-                            {{ $product->stok <= 0 ? 'disabled' : '' }}>
+                            {{ $product->stock <= 0 ? 'disabled' : '' }}>
                                 <i class="fa-solid fa-cart-plus"></i>
-                                {{ $product->stok > 0 ? 'Tambah ke Keranjang' : 'Stok Habis' }}
+                                {{ $product->stock > 0 ? 'Tambah ke Keranjang' : 'stock Habis' }}
                         </button>
                     </form>
                 </div>
@@ -368,13 +399,13 @@
                         class="bg-gray-100 rounded aspect-square mb-3 flex items-center justify-center overflow-hidden">
                         @if($related->images->isNotEmpty())
                         <img src="{{ asset('storage/' . $related->images->first()->path_foto) }}"
-                            alt="{{ $related->nama_product }}" class="w-full h-full object-cover">
+                            alt="{{ $related->name }}" class="w-full h-full object-cover">
                         @else
                         <i class="fa-solid fa-seedling text-4xl text-leafly-green"></i>
                         @endif
                     </div>
-                    <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->nama_product }}</h4>
-                    <p class="text-leafly-dark font-bold">Rp {{ number_format($related->harga, 0, ',', '.') }}</p>
+                    <h4 class="font-bold text-sm mb-1 line-clamp-2">{{ $related->name }}</h4>
+                    <p class="text-leafly-dark font-bold">Rp {{ number_format($related->price, 0, ',', '.') }}</p>
                 </a>
                 @endforeach
             </div>

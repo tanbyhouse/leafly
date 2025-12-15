@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('sku')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('type', ['benih', 'bibit', 'alat', 'paket']);
+            $table->string('type', 50);
 
             $table->decimal('price', 12, 2);
             $table->integer('stock')->default(0);

@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('districts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('city_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('city_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->string('name');
-            $table->string('rajaongkir_id')->unique();
         });
     }
 

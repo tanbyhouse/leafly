@@ -11,32 +11,29 @@ class CartController extends Controller
 {
     public function index()
     {
-        // DEFAULT (WAJIB ADA)
-        $cartItems = collect();
-        $subtotal = 0;
+        $cartItems = Cart::with('product.images', 'product.category')
+            ->where(function ($q) {
+                if (Auth::check()) {
+                    $q->where('user_id', Auth::id());
+                } else {
+                    $q->where('session_id', session()->getId());
+                }
+            })
+            ->get();
+
+        $subtotal = $cartItems->sum(
+            fn($item) => $item->product->price * $item->quantity
+        );
+
         $adminFee = 1000;
 
-        // JIKA USER LOGIN
-        if (Auth::check() && Auth::user()->pelanggan) {
-            $pelanggan = Auth::user()->pelanggan;
-
-            $cartItems = Keranjang::with(['product.images', 'product.category'])
-                ->where('pelanggan_id', $pelanggan->id)
-                ->get();
-
-            $subtotal = $cartItems->sum(
-                fn($item) =>
-                $item->product->harga * $item->jumlah
-            );
-        }
-
-        // PASTIKAN SEMUA VARIABEL TERKIRIM
         return view('customer.cart', compact(
             'cartItems',
             'subtotal',
             'adminFee'
         ));
     }
+
     public function add(Request $request)
     {
         $request->validate([
@@ -45,7 +42,6 @@ class CartController extends Controller
         ]);
 
         if (auth()->check()) {
-            // USER LOGIN
             $cart = Cart::firstOrNew([
                 'user_id'    => auth()->id(),
                 'product_id' => $request->product_id,
@@ -53,10 +49,10 @@ class CartController extends Controller
 
             $cart->quantity += $request->quantity;
             $cart->save();
-        } else {
-            // GUEST → SESSION
-            $cart = session()->get('cart', []);
 
+            $count = Cart::where('user_id', auth()->id())->sum('quantity');
+        } else {
+            $cart = session()->get('cart', []);
             $productId = $request->product_id;
 
             if (isset($cart[$productId])) {
@@ -70,20 +66,48 @@ class CartController extends Controller
             }
 
             session()->put('cart', $cart);
+            $count = collect($cart)->sum('quantity');
         }
 
-        return back()->with('success', 'Produk ditambahkan ke keranjang');
+        return response()->json([
+            'success' => true,
+            'count'   => $count
+        ]);
     }
 
     public function count()
     {
+        return response()->json([
+            'count' => $this->countItems()
+        ]);
+    }
+
+    private function countItems()
+    {
+        return Cart::where(function ($q) {
+            if (Auth::check()) {
+                $q->where('user_id', Auth::id());
+            } else {
+                $q->where('session_id', session()->getId());
+            }
+        })->sum('quantity');
+    }
+
+    public function remove($id)
+    {
         if (auth()->check()) {
-            $count = Cart::where('user_id', auth()->id())->sum('quantity');
+            Cart::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->delete();
         } else {
-            $cart = session('cart', []);
-            $count = collect($cart)->sum('quantity');
+            // GUEST → SESSION
+            $cart = session()->get('cart', []);
+            unset($cart[$id]);
+            session()->put('cart', $cart);
         }
 
-        return response()->json(['count' => $count]);
+        return redirect()
+            ->route('cart.index')
+            ->with('success', 'Produk berhasil dihapus dari keranjang');
     }
 }
