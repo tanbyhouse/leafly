@@ -1,0 +1,19 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\Category;
+
+class CategorySeeder extends Seeder
+{
+    public function run(): void
+    {
+        Category::insert([
+            ['name' => 'Benih', 'description' => 'Benih berkualitas'],
+            ['name' => 'Bibit', 'description' => 'Bibit unggul'],
+            ['name' => 'Alat', 'description' => 'Peralatan kebun'],
+            ['name' => 'Pupuk', 'description' => 'Pupuk perkebunan'],
+        ]);
+    }
+}
