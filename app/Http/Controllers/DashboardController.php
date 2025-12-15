@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pesanan;
-use App\Models\Produk;
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // live statistics
-        $totalSales = (float) Pesanan::where('status_pembayaran', 'dibayar')->sum('total');
-        $totalOrders = Pesanan::count();
-        $totalProducts = Produk::count();
-        $totalCustomers = User::where('tipe_user', 'pelanggan')->count();
+        $totalSales = (float) Order::where('payment_status', 'paid')->sum('total');
+        $totalOrders = Order::count();
+        $totalProducts = Product::count();
+        $totalCustomers = User::whereHas('roles', function ($q) {
+            $q->where('name', 'pelanggan');
+        })->count();
 
         $stats = [
             'total_sales' => $totalSales,
@@ -24,17 +25,24 @@ class DashboardController extends Controller
             'total_customers' => $totalCustomers,
         ];
 
-        $recentOrdersModels = Pesanan::with('pelanggan.user')
+        $recentOrdersModels = Order::with('user')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
         $recent_orders = $recentOrdersModels->map(function ($o) {
+            $status = 'Menunggu';
+            if (in_array($o->order_status, ['completed', 'delivered', 'finished'])) {
+                $status = 'Selesai';
+            } elseif (in_array($o->order_status, ['processed', 'shipped'])) {
+                $status = 'Dikemas';
+            }
+
             return [
-                'id' => $o->id,
-                'user' => optional($o->pelanggan->user)->name ?? ($o->pelanggan_name ?? '—'),
+                'id' => $o->order_number ?? $o->id,
+                'user' => optional($o->user)->name ?? '—',
                 'total' => $o->total ?? 0,
-                'status' => $o->status ?? ($o->status_pembayaran ?? 'Menunggu'),
+                'status' => $status,
             ];
         })->toArray();
 
