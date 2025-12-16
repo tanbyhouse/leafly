@@ -84,4 +84,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasRole('pelanggan');
     }
+
+    public function getRoleAttribute(): ?string
+    {
+        return $this->roles->first()?->name;
+    }
 }

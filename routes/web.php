@@ -16,6 +16,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', fn() => view('welcome'))->name('home');
 
@@ -33,16 +34,20 @@ Route::get('/katalog/{id}', [ProductController::class, 'show'])->name('products.
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 
 Route::get('/pesanan', [
-    OrderController::class, 'index'
+    OrderController::class,
+    'index'
 ])->name('orders.index');
 Route::get('/pesanan/{id}', [
-    OrderController::class, 'show'
+    OrderController::class,
+    'show'
 ])->name('orders.show');
 Route::post('/profile/avatar', [
-    ProfileController::class, 'updateAvatar'
+    ProfileController::class,
+    'updateAvatar'
 ])->name('profile.avatar');
 Route::get('/profil', [
-    ProfileController::class, 'index'
+    ProfileController::class,
+    'index'
 ])->name('profile.index');
 
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -73,34 +78,41 @@ Route::post('/ajax/ongkir', [CheckoutController::class, 'ajaxOngkir'])
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'App\\Http\\Middleware\\RoleMiddleware:admin'])->group(function () {
     Route::get('/dashboard', [
-        DashboardController::class, 'index'])
+        DashboardController::class,
+        'index'
+    ])
         ->name('dashboard');
     Route::get('/laporan', [
-        AdminLaporanController::class, 'index'])
+        AdminLaporanController::class,
+        'index'
+    ])
         ->name('laporan.index');
-
-    });
-Route::resource('products',
-    AdminProductController::class, [
-    'names' => 'admin.products'
-]);
-Route::resource('busuk',
-    AdminProductBusukController::class, [
-    'names' => 'admin.busuk'
-]);
-Route::resource('transactions',
-    AdminTransactionsController::class, ['names' => 'admin.transactions'])
+});
+Route::resource(
+    'products',
+    AdminProductController::class,
+    [
+        'names' => 'admin.products'
+    ]
+);
+Route::resource(
+    'busuk',
+    AdminProductBusukController::class,
+    [
+        'names' => 'admin.busuk'
+    ]
+);
+Route::resource(
+    'transactions',
+    AdminTransactionsController::class,
+    ['names' => 'admin.transactions']
+)
     ->only(['index', 'show', 'update']);
 Route::post('/reviews', [
-    ReviewController::class, 'store'])
+    ReviewController::class,
+    'store'
+])
     ->name('reviews.store')->middleware('auth');
-
-Route::get('/users', [
-    AdminUserController::class, 'index'])
-    ->name('admin.users.index');
-Route::delete('/users/{id}', [
-    AdminUserController::class, 'destroy'])
-    ->name('admin.users.destroy');
 
 /* USER */
 Route::middleware('auth')->group(function () {
@@ -135,3 +147,12 @@ Route::get('/reset-password/{token}', [ResetPasswordController::class, 'show'])
 Route::post('/reset-password', [ResetPasswordController::class, 'update'])
     ->middleware('guest')
     ->name('password.update');
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::resource('users', UserController::class)
+            ->except(['show']);
+    });

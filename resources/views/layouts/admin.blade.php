@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dashboard - Leafly')</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,10 +33,10 @@
 <body class="bg-gray-100 text-gray-800">
 
     <div class="flex h-screen overflow-hidden">
-        
+
         <!-- sidebar -->
         <aside class="w-64 bg-leafly-dark text-white flex flex-col shadow-xl fixed md:relative z-30 transition-all duration-300 transform -translate-x-full md:translate-x-0 h-full" id="sidebar">
-            
+
             <div class="h-16 flex items-center justify-center border-b border-white/10 bg-leafly-dark/50">
                 <a href="{{ url('/') }}" class="flex items-center gap-2 text-white no-underline group">
                     <div class="w-10 h-10 bg-leafly-green rounded-full flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform text-leafly-dark">
@@ -48,9 +48,9 @@
 
             <!-- menu items -->
             <nav class="grow p-4 space-y-2 overflow-y-auto custom-scrollbar">
-                
+
                 <p class="px-4 text-xs font-bold text-gray-400 uppercase mt-2 mb-2">Utama</p>
-                
+
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.dashboard') ? 'bg-leafly-gold text-leafly-dark font-bold' : '' }}">
                     <i class="fa-solid fa-gauge w-5 text-center"></i> Dashboard
                 </a>
@@ -95,7 +95,7 @@
 
         <!-- content wrap -->
         <div class="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50">
-            
+
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-20">
                 <button id="sidebarToggle" class="md:hidden text-gray-600 text-xl">
                     <i class="fa-solid fa-bars"></i>
