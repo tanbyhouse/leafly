@@ -2,98 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Katalog produk
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('products.index');
+        $query = Product::with(['category', 'images'])
+            ->where('is_active', true);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%")
+                    ->orWhere('sku', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('category')) {
+            $categories = array_map('ucfirst', $request->category);
+
+            $query->whereHas('category', function ($q) use ($categories) {
+                $q->whereIn('name', $categories);
+            });
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        switch ($request->get('sort', 'terbaru')) {
+            case 'termurah':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'termahal':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+        $categories = Category::all();
+
+        return view('products.index', compact('products', 'categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
-        // dummy dolooo
-        $product = [
-            'id' => $id,
-            'name' => 'Benih Selada Hidroponik Premium',
-            'category' => 'Benih Tanaman',
-            'price' => 15000,
-            'description' => 'Benih selada pilihan dengan tingkat germinasi 98%. Sangat cocok untuk sistem hidroponik NFT, DFT, maupun Wick System. Hasil panen memiliki tekstur renyah, rasa manis, dan bebas rasa pahit. Dikemas dalam aluminium foil untuk menjaga kualitas benih.',
-            'stock' => 50,
-            'rating' => 4.8,
-            'reviews_count' => 2,
-            'images' => ['fa-seedling', 'fa-plant-wilt', 'fa-leaf'],
-            'reviews' => [
-                [
-                    'user_name' => 'Budi Santoso',
-                    'rating' => 5,
-                    'comment' => 'Benihnya cepat tumbuh, mantap!',
-                    'date' => '2025-11-20',
-                    'avatar' => null
-                ],
-                [
-                    'user_name' => 'Siti Aminah',
-                    'rating' => 4,
-                    'comment' => 'Pengiriman cepat, packing aman.',
-                    'date' => '2025-11-22',
-                    'avatar' => null
-                ]
-            ],
-            'care' => [
-                ['icon' => 'fa-sun', 'title' => 'Cahaya', 'desc' => 'Butuh sinar matahari penuh (min. 6 jam/hari).'],
-                ['icon' => 'fa-droplet', 'title' => 'Penyiraman', 'desc' => 'Siram 2x sehari (pagi & sore) agar tanah lembab.'],
-                ['icon' => 'fa-temperature-half', 'title' => 'Suhu', 'desc' => 'Optimal pada suhu sejuk 20-25°C.'],
-                ['icon' => 'fa-seedling', 'title' => 'Pemupukan', 'desc' => 'Berikan NPK Daun setiap 1 minggu sekali.'],
-            ]
-        ];
+        $product = Product::with(['category', 'images', 'careGuide', 'reviews.user'])
+            ->findOrFail($id);
 
-        return view('products.show', compact('product'));
+        $averageRating = $product->reviews()->avg('rating') ?? 0;
+        $totalReviews  = $product->reviews()->count();
+
+        $relatedProducts = Product::with('images')
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->limit(4)
+            ->get();
+
+        return view('products.show', compact(
+            'product',
+            'averageRating',
+            'totalReviews',
+            'relatedProducts'
+        ));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * AJAX search
      */
-    public function edit(string $id)
+    public function search(Request $request)
     {
-        //
-    }
+        $q = $request->get('q', '');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Product::with(['category', 'images'])
+            ->where('is_active', true)
+            ->where(function ($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                    ->orWhere('sku', 'like', "%{$q}%");
+            })
+            ->limit(10)
+            ->get()
+            ->map(fn($p) => [
+                'id'    => $p->id,
+                'name'  => $p->name,
+                'price' => $p->price,
+                'image' => $p->images->first()->path ?? null,
+                'category' => $p->category->name ?? '',
+            ]);
     }
 }

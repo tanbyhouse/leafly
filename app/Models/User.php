@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+// ✅ TAMBAHKAN INI
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
+
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, CanResetPassword;
 
     protected $fillable = [
         'name',
@@ -21,10 +25,18 @@ class User extends Authenticatable
 
     protected $with = ['roles'];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
 
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
 
+    /* =====================
+       RELATIONS
+    ===================== */
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'user_roles');
@@ -40,6 +52,14 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /* =====================
+       ROLE HELPERS
+    ===================== */
     public function hasRole(string $role): bool
     {
         return $this->roles()->where('name', $role)->exists();
@@ -48,11 +68,6 @@ class User extends Authenticatable
     public function hasAnyRole(array $roles): bool
     {
         return $this->roles()->whereIn('name', $roles)->exists();
-    }
-
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
     }
 
     public function isAdmin(): bool
