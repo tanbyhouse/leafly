@@ -99,3 +99,6 @@ Route::get('/users', [
 Route::delete('/users/{id}', [
     AdminUserController::class, 'destroy'])
     ->name('admin.users.destroy');
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () { 
+    Route::resource('products', AdminProductController::class);
+});

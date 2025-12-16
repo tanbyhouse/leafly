@@ -44,7 +44,7 @@
             <tbody class="divide-y divide-gray-100">
                 @foreach($products as $product)
                 <tr class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4">
+                    <!-- <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 bg-gray-200 rounded-md flex items-center justify-center text-gray-400">
                                 <i class="fa-solid fa-image"></i>
@@ -54,10 +54,33 @@
                                 <div class="text-xs text-gray-500">ID: {{ $product['id'] }}</div>
                             </div>
                         </div>
+                    </td> -->
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            @if($product->images->count() > 0)
+                                @php
+                                    $primaryImage = $product->images->where('is_primary', true)->first();
+                                    if(!$primaryImage) {
+                                        $primaryImage = $product->images->first();
+                                    }
+                                @endphp
+                                <img src="{{ asset('storage/' . $primaryImage->path) }}" 
+                                     alt="{{ $product->name }}" 
+                                     class="w-12 h-12 object-cover rounded-md">
+                            @else
+                                <div class="w-12 h-12 bg-gray-200 rounded-md flex items-center justify-center text-gray-400">
+                                    <i class="fa-solid fa-image"></i>
+                                </div>
+                            @endif
+                            <div>
+                                <div class="font-bold text-gray-800">{{ $product->name }}</div>
+                                <div class="text-xs text-gray-500">ID: {{ $product->id }}</div>
+                            </div>
+                        </div>
                     </td>
                     <td class="px-6 py-4">
                         <span class="bg-green-50 text-leafly-dark px-2 py-1 rounded text-xs font-bold border border-green-100">
-                            {{ $product['category'] }}
+                            {{ $product->category->name }}
                         </span>
                     </td>
                     <td class="px-6 py-4 font-medium text-gray-800">

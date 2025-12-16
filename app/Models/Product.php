@@ -65,4 +65,14 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    // accessor for primary image path (public URL)
+    public function getImageAttribute()
+    {
+        $img = $this->images()->where('is_primary', true)->first();
+        if ($img && $img->path) {
+            return '/storage/' . ltrim($img->path, '/');
+        }
+        return 'images/default-product.png';
+    }
 }

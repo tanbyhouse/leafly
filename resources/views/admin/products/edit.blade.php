@@ -72,6 +72,20 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Foto Produk</h3>
                     
+                    <div id="imagePreview" class="{{ $product->images->isEmpty() ? 'hidden' : '' }} w-full flex flex-col items-center">
+                        @php
+                            $imageUrl = $product->images->isNotEmpty() 
+                                    ? asset('storage/' . $product->images->first()->path) 
+                                    : '#';
+                        @endphp
+                                
+                        <img id="preview" src="{{ $imageUrl }}" alt="Preview" class="max-h-64 w-auto object-contain rounded-lg mb-4 shadow-sm bg-white">
+                                
+                        <button type="button" onclick="removeImage()" class="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-bold hover:bg-red-100 transition flex items-center gap-2">
+                            <i class="fa-solid fa-trash"></i> Ganti Gambar
+                        </button>
+                    </div>    
+
                     <div class="mb-4 flex justify-center">
                         <img id="image-preview" 
                              src="{{ asset($product->image ?? 'images/default-product.png') }}" 
@@ -95,14 +109,37 @@
     </form>
 </div>
 
+@push('scripts')
 <script>
     function previewImage(event) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const output = document.getElementById('image-preview');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        const input = event.target;
+        const uploadArea = document.getElementById('uploadArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const preview = document.getElementById('preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                uploadArea.classList.add('hidden');    
+                imagePreview.classList.remove('hidden'); 
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeImage() {
+        const input = document.getElementById('image');
+        const uploadArea = document.getElementById('uploadArea');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // Reset input agar dianggap kosong (kecuali user pilih file lagi nanti)
+        input.value = ''; 
+        
+        // Tampilkan kotak upload, sembunyikan preview
+        imagePreview.classList.add('hidden');
+        uploadArea.classList.remove('hidden'); 
     }
 </script>
+@endpush
 @endsection
